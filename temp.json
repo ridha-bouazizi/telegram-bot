@@ -1,0 +1,12 @@
+{
+    "telegram_app_creds":[
+        {
+            "api_id": 28783659,
+            "api_hash": "1aa5b1025101adcfdc2e4ebc946a6f1d"
+        },
+        {
+            "Test configuration": "149.154.167.40:443",
+            "public_key":"telegram_app.pub.crt"
+        }
+    ],
+}
