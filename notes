@@ -1,0 +1,6 @@
+creating connections :
+    new_connection = Connection(name='My Connection', apiID='your_api_id', apiSecret='your_api_secret', type='user')
+    current_user.connections.append(new_connection)
+    db.session.add(new_connection)
+    db.session.commit()
+

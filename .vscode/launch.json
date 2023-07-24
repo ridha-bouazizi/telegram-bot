@@ -9,11 +9,24 @@
       "type": "python",
       "request": "launch",
       "module": "flask",
+      "env": { "FLASK_APP": "app.py", "FLASK_DEBUG": "1" },
+      "args": ["run", "--no-debugger", "--no-reload"],
+      "jinja": true,
+      "justMyCode": true
+    },
+    {
+      "name": "Python: Flask",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
       "env": {
         "TGB_FLASK_APP": "app.py",
         "TGB_FLASK_DEBUG": "1",
         "TGB_SECRET_KEY": "3PfMNY2Q6zDk+rI2/l4hBTFFT8RqA2OmLg4KCiQ2GdcHUHnWpeP+RZFZnAxOe5GHu/7ke3nBuTwFxjNuyMlmBg==",
-        "TGB_DB_NAME": "tgb.db"
+        "TGB_DB_NAME": "tgb.db.sqlite",
+        "TGB_INIT_USER_EMAIL": "admin@example.com",
+        "TGB_INIT_USER_PASSWORD": "admin",
+        "TGB_INIT_USER_FIRST_NAME": "Admin"
       },
       "args": ["run", "--no-debugger", "--no-reload"],
       "jinja": true,

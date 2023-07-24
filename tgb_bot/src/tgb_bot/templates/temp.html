@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col">
+        <div class="d-lg-flex justify-content-lg-end"><input class="btn btn-primary d-lg-flex" type="submit" name="conn_edit" value="Edit connection"></div>
+    </div>
+</div>
+<div class="row" style="border-color: var(--bs-emphasis-color);">
+    <div class="col">
+        <section class="position-relative py-1 py-xl-1">
+            <div class="container position-relative">
+                <form>
+                    <div class="row d-flex justify-content-center" style="padding: 10px;">
+                        <div class="col"><label class="form-label">Connection Name:</label><input class="form-control" type="text" disabled="" value="Connection name" placeholder="Connection name" name="conn_name" readonly=""></div>
+                        <div class="col"><label class="form-label">Date created:</label><input class="form-control" type="datetime-local" name="conn_date" value="2017-06-01T08:30:15" disabled="" readonly=""></div>
+                    </div>
+                    <hr>
+                    <div class="row d-flex justify-content-center" style="padding: 10px;">
+                        <div class="col"><label class="form-label">API ID</label><input class="form-control" type="text" disabled="" value="API ID" placeholder="API ID" name="conn_api_id" readonly=""></div>
+                        <div class="col"><label class="form-label">API HASH</label><input class="form-control" type="text" disabled="" value="API HASH" placeholder="API HASH" name="conn_api_hash" readonly=""></div>
+                        <div class="col"><label class="form-label">Account type</label>
+                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-1" name="conn_type" checked="" disabled="" value="bot"><label class="form-check-label" for="formCheck-1">BOT Account</label></div>
+                            <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-2" name="conn_type" disabled="" value="user"><label class="form-check-label" for="formCheck-2">USER Account</label></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col">
+                            <div class="d-lg-flex justify-content-lg-center">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-3" name="conn_accept_change" disabled="" value="1"><label class="form-check-label" for="formCheck-3">Confirm changes .</label></div>
+                            </div>
+                            <div class="d-lg-flex justify-content-lg-center"><input class="btn btn-primary" type="submit" name="conn_save_edit" value="Save changes" disabled=""></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
