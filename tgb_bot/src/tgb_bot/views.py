@@ -65,7 +65,8 @@ def createConnection():
             if connection:
                 flash("Connection already exists.", category="error")
             else:
-                new_connection = Connection(name=name, apiID=api_id, apiSecret=api_hash, type=type, user_id=current_user.id)
+                last_modified = db.func.current_timestamp()
+                new_connection = Connection(name=name, apiID=api_id, apiSecret=api_hash, type=type, user_id=current_user.id, last_modified=last_modified)
                 try:
                     db.session.add(new_connection)
                     db.session.commit()
@@ -73,4 +74,38 @@ def createConnection():
                 except Exception as e:
                     flash("Error creating connection.", category="error")
                     print(e)
+    return redirect(url_for("views.connections"))
+
+
+@views.route('/getConnection', methods=['GET']) # type: ignore
+@login_required
+def getConnection():
+    if request.method == 'GET': 
+        connection_id = request.args.get('id')
+        if connection_id == "":
+            flash("Please select a connection.", category="error")
+        else:
+            try:
+                connection = Connection.query.filter_by(id=connection_id).first()
+            except Connection.DoesNotExist:
+                connection = None
+
+            if connection:
+                return jsonify({
+                    "name": connection.name,
+                    "api_id": connection.apiID,
+                    "api_hash": connection.apiSecret,
+                    "type": connection.type.value,
+                    "id": connection.id,
+                    "last_modified": {
+                        "day": connection.last_modified.day,
+                        "month": connection.last_modified.month,
+                        "year": connection.last_modified.year,
+                        "hour": connection.last_modified.hour,
+                        "minute": connection.last_modified.minute,
+                        "second": connection.last_modified.second
+                    }
+                })
+            else:
+                flash("Connection does not exist.", category="error")
     return redirect(url_for("views.connections"))
