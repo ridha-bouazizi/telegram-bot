@@ -24,6 +24,7 @@
       href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap"
     />
     <script src="{{ url_for('static', filename='js/client.js') }}"></script>
+  
   </head>
 
   <body>
@@ -59,22 +60,28 @@
         <div class="collapse navbar-collapse" id="navcol-1">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <a class="nav-link" href="services.html">Connections</a>
+              <a class="nav-link" href="/connections">Connections</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="projects.html">Rules</a>
+              <a class="nav-link" href="/rules">Rules</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="contacts.html">Settings</a>
+              <a class="nav-link" href="/settings">Settings</a>
             </li>
           </ul>
-          <a class="btn btn-primary shadow" role="button" href="signup.html"
-            >Login</a
+          {% if user and user.is_authenticated %}
+          <a class="btn btn-primary shadow" role="button" href="/logout"
+            >Logout</a
           >
+          {% else %}
+          <a class="btn btn-primary shadow" role="button" href="/login"
+            >Login</a>
+          {% endif %}
         </div>
       </div>
     </nav>
-    {% with messages = get_flashed_messages(with_categories=true) %}
+    <div id="flashedMessages">
+      {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
     {% if category ==
@@ -94,6 +101,8 @@
     </div>
     {% endif %} {% endfor %} {% endif %} {% endwith %} {% block content %} {%
     endblock %}
+    </div>
+    
     <footer class="bg-primary-gradient">
       <div class="container py-4 py-lg-5">
         <hr />

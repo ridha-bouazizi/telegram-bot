@@ -1,7 +1,9 @@
-from flask import Flask
+from http.client import HTTPException
+from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+from tgb_bot.http_exceptions import Custom302Exception
 from .envVars import EnvVars
 from .nicelogger import NiceLogger
 from werkzeug.security import generate_password_hash
@@ -74,6 +76,12 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        # note that we set the 404 status explicitly
+        return render_template('404.html', error=404), 404
+    
     return app
 
 

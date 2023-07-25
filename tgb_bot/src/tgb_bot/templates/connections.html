@@ -1,89 +1,306 @@
-{% extends "base.html" %} {% block title %}Connections{% endblock %} {% block content
-    %}
-    
-    <section class="py-5">
-        <div class="container" style="border-style: solid;border-color: var(--bs-link-color);padding: 10px;border-radius: 16px;">
-            <div class="row">
+{% extends "base.html" %} {% block title %}Connections{% endblock %} {% block
+content %}
+
+<section class="py-5">
+  <div
+    class="container"
+    style="
+      border-style: solid;
+      border-color: var(--bs-link-color);
+      padding: 10px;
+      border-radius: 16px;
+    "
+  >
+    <div class="row">
+      <div class="col">
+        <div
+          class="d-lg-flex d-xxl-flex justify-content-lg-start justify-content-xxl-center"
+        >
+          <div class="dropend">
+            <button
+              class="btn btn-primary dropdown-toggle"
+              aria-expanded="false"
+              data-bs-toggle="dropdown"
+              type="button"
+            >
+              Select a pre-existing connection&nbsp;
+            </button>
+            <div class="dropdown-menu" style="/*width: inherit;*/">
+              {% for connection in user.connections %}
+              <a
+                class="dropdown-item"
+                id="{{connection.id}}"
+                name="connections_item"
+                >{{connection.name}}</a
+              >
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="d-lg-flex justify-content-lg-end">
+          <input
+            class="btn btn-primary d-lg-flex"
+            type="submit"
+            name="conn_edit"
+            value="Edit connection"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row" style="border-color: var(--bs-emphasis-color)">
+      <div class="col">
+        <section class="position-relative py-1 py-xl-1">
+          <div class="container position-relative">
+            <form id="editConnectionForm">
+              <div
+                class="row d-flex justify-content-center"
+                style="padding: 10px"
+              >
                 <div class="col">
-                    <div class="d-lg-flex d-xxl-flex justify-content-lg-start justify-content-xxl-center">
-                        <div class="dropend"><button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">Select a pre-existing connection&nbsp;</button>
-                            <div class="dropdown-menu" style="/*width: inherit;*/">
-                                {% for connection in user.connections %}
-                                <a class="dropdown-item" id="{{connection.id}}" name="connections_item">{{connection.name}}</a>
-                                {% endfor %}
-                            </div>
-                        </div>
+                  <label class="form-label">Connection Name:</label
+                  ><input
+                    class="form-control"
+                    type="text"
+                    disabled=""
+                    value=""
+                    placeholder="Connection name"
+                    name="conn_name"
+                    readonly=""
+                  />
+                </div>
+                <div class="col">
+                  <label class="form-label">Last modified:</label
+                  ><input
+                    class="form-control"
+                    type="datetime-local"
+                    name="conn_date"
+                    value=""
+                    disabled=""
+                    readonly=""
+                  />
+                </div>
+              </div>
+              <hr />
+              <div
+                class="row d-flex justify-content-center"
+                style="padding: 10px"
+              >
+                <div class="col">
+                  <label class="form-label">API ID</label
+                  ><input
+                    class="form-control"
+                    type="text"
+                    disabled=""
+                    value=""
+                    placeholder="API ID"
+                    name="conn_api_id"
+                    readonly=""
+                  />
+                </div>
+                <div class="col">
+                  <label class="form-label">API HASH</label
+                  ><input
+                    class="form-control"
+                    type="text"
+                    disabled=""
+                    value=""
+                    placeholder="API HASH"
+                    name="conn_api_hash"
+                    readonly=""
+                  />
+                </div>
+                <div class="col">
+                  <label class="form-label">Account type</label>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      id="formCheck-1"
+                      name="conn_type"
+                      checked=""
+                      disabled=""
+                      value="BOT"
+                    /><label class="form-check-label" for="formCheck-1"
+                      >BOT Account</label
+                    >
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      id="formCheck-2"
+                      name="conn_type"
+                      disabled=""
+                      value="USER"
+                    /><label class="form-check-label" for="formCheck-2"
+                      >USER Account</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div class="row d-flex justify-content-center">
+                <div class="col">
+                  <div class="d-lg-flex justify-content-lg-center">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="formCheck-3"
+                        name="conn_accept_change"
+                        disabled=""
+                      /><label class="form-check-label" for="formCheck-3"
+                        >Confirm changes .</label
+                      >
                     </div>
+                  </div>
+                  <div class="d-lg-flex justify-content-lg-center">
+                    <input
+                      class="btn btn-primary"
+                      type="submit"
+                      name="conn_save_edit"
+                      value="Save changes"
+                      disabled=""
+                    />
+                  </div>
                 </div>
                 <div class="col">
-                    <div class="d-lg-flex justify-content-lg-end"><input class="btn btn-primary d-lg-flex" type="submit" name="conn_edit" value="Edit connection"></div>
+                  <div class="d-lg-flex justify-content-lg-center">
+                    <div class="form-check">
+                      <input
+                        id="formCheck-4"
+                        class="form-check-input"
+                        type="checkbox"
+                        name="conn_accept_delete"
+                      /><label class="form-check-label" for="formCheck-4"
+                        >Confirm deletion .</label
+                      >
+                    </div>
+                  </div>
+                  <div class="d-lg-flex justify-content-lg-center">
+                    <input
+                      class="btn btn-danger"
+                      type="submit"
+                      name="conn_delete"
+                      value="Delete Connection"
+                      style
+                    />
+                  </div>
                 </div>
-            </div>
-            <div class="row" style="border-color: var(--bs-emphasis-color);">
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="py-5">
+  <div
+    class="container"
+    style="
+      border-style: solid;
+      border-color: var(--bs-link-color);
+      padding: 10px;
+      border-radius: 16px;
+    "
+  >
+    <div class="row" style="border-color: var(--bs-emphasis-color)">
+      <div class="col">
+        <section class="position-relative py-1 py-xl-1">
+          <div class="container position-relative">
+            <form action="/createConnection" method="POST">
+              <div
+                class="row d-flex justify-content-center"
+                style="padding: 10px"
+              >
                 <div class="col">
-                    <section class="position-relative py-1 py-xl-1">
-                        <div class="container position-relative">
-                            <form>
-                                <div class="row d-flex justify-content-center" style="padding: 10px;">
-                                    <div class="col"><label class="form-label">Connection Name:</label><input class="form-control" type="text" disabled="" value="Connection name" placeholder="Connection name" name="conn_name" readonly=""></div>
-                                    <div class="col"><label class="form-label">Last modified:</label><input class="form-control" type="datetime-local" name="conn_date" value="2017-06-01T08:30:15" disabled="" readonly=""></div>
-                                </div>
-                                <hr>
-                                <div class="row d-flex justify-content-center" style="padding: 10px;">
-                                    <div class="col"><label class="form-label">API ID</label><input class="form-control" type="text" disabled="" value="API ID" placeholder="API ID" name="conn_api_id" readonly=""></div>
-                                    <div class="col"><label class="form-label">API HASH</label><input class="form-control" type="text" disabled="" value="API HASH" placeholder="API HASH" name="conn_api_hash" readonly=""></div>
-                                    <div class="col"><label class="form-label">Account type</label>
-                                        <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-1" name="conn_type" checked="" disabled="" value="bot"><label class="form-check-label" for="formCheck-1">BOT Account</label></div>
-                                        <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-2" name="conn_type" disabled="" value="user"><label class="form-check-label" for="formCheck-2">USER Account</label></div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col">
-                                        <div class="d-lg-flex justify-content-lg-center">
-                                            <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-3" name="conn_accept_change" disabled="" value="1"><label class="form-check-label" for="formCheck-3">Confirm changes .</label></div>
-                                        </div>
-                                        <div class="d-lg-flex justify-content-lg-center"><input class="btn btn-primary" type="submit" name="conn_save_edit" value="Save changes" disabled=""></div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </section>
+                  <label class="form-label">Connection Name:</label
+                  ><input
+                    class="form-control"
+                    id="conn_name"
+                    type="text"
+                    value="Connection name"
+                    placeholder="Connection name"
+                    name="new_conn_name"
+                  />
                 </div>
-            </div>
-        </div>
-    </section>
-    <section class="py-5">
-        <div class="container" style="border-style: solid;border-color: var(--bs-link-color);padding: 10px;border-radius: 16px;">
-            <div class="row" style="border-color: var(--bs-emphasis-color);">
+                <div class="col"></div>
+              </div>
+              <hr />
+              <div
+                class="row d-flex justify-content-center"
+                style="padding: 10px"
+              >
                 <div class="col">
-                    <section class="position-relative py-1 py-xl-1">
-                        <div class="container position-relative">
-                            <form action="/createConnection" method="POST">
-                                <div class="row d-flex justify-content-center" style="padding: 10px;">
-                                    <div class="col"><label class="form-label">Connection Name:</label><input class="form-control" id="conn_name" type="text" value="Connection name" placeholder="Connection name" name="new_conn_name"></div>
-                                    <div class="col"></div>
-                                </div>
-                                <hr>
-                                <div class="row d-flex justify-content-center" style="padding: 10px;">
-                                    <div class="col"><label class="form-label">API ID</label><input class="form-control" id="api_id" type="text" value="API ID" placeholder="API ID" name="new_conn_api_id"></div>
-                                    <div class="col"><label class="form-label">API HASH</label><input class="form-control" id="api_secret" type="text" value="API HASH" placeholder="API HASH" name="new_conn_api_hash"></div>
-                                    <div class="col"><label class="form-label">Account type</label>
-                                        <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-4" name="new_conn_type" checked="" value="BOT"><label class="form-check-label" for="formCheck-4">BOT Account</label></div>
-                                        <div class="form-check"><input class="form-check-input" type="radio" id="formCheck-5" name="new_conn_type" value="USER"><label class="form-check-label" for="formCheck-5">USER Account</label></div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col">
-                                        <div class="d-lg-flex justify-content-lg-center"><input class="btn btn-primary" type="submit" name="conn_save_edit" value="Save connection config."></div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </section>
+                  <label class="form-label">API ID</label
+                  ><input
+                    class="form-control"
+                    id="api_id"
+                    type="text"
+                    value="API ID"
+                    placeholder="API ID"
+                    name="new_conn_api_id"
+                  />
                 </div>
-            </div>
-        </div>
-    </section>
-    {% endblock %}
+                <div class="col">
+                  <label class="form-label">API HASH</label
+                  ><input
+                    class="form-control"
+                    id="api_secret"
+                    type="text"
+                    value="API HASH"
+                    placeholder="API HASH"
+                    name="new_conn_api_hash"
+                  />
+                </div>
+                <div class="col">
+                  <label class="form-label">Account type</label>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      id="formCheck-4"
+                      name="new_conn_type"
+                      checked=""
+                      value="BOT"
+                    /><label class="form-check-label" for="formCheck-4"
+                      >BOT Account</label
+                    >
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      id="formCheck-5"
+                      name="new_conn_type"
+                      value="USER"
+                    /><label class="form-check-label" for="formCheck-5"
+                      >USER Account</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div class="row d-flex justify-content-center">
+                <div class="col">
+                  <div class="d-lg-flex justify-content-lg-center">
+                    <input
+                      class="btn btn-primary"
+                      type="submit"
+                      name="conn_save_edit"
+                      value="Save connection config."
+                    />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
