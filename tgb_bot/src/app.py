@@ -1,11 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy
 from tgb_bot import create_app
+from tgb_bot.celery_app import celery_init_app, start_celery_app
 from tgb_bot.models import User
 from tgb_bot.nicelogger import NiceLogger
 from werkzeug.security import generate_password_hash
 
 app = create_app()
 
+celery = start_celery_app(app)
 
 def init_admin_user():
     nicelogger = NiceLogger()

@@ -2,5 +2,11 @@
     "python.analysis.typeCheckingMode": "basic",
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
-    "python.linting.flake8Args": ["--max-line-length=0"]
+    "python.linting.flake8Args": [
+        "--max-line-length=0"
+    ],
+    "python.linting.enabled": true,
+    "python.analysis.extraPaths": [
+        "./tgb_bot/src/tgb_bot"
+    ]
 }
