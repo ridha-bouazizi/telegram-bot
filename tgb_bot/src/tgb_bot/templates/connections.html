@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Connections{% endblock %} {% block
 content %}
 
-<section class="py-5">
+<section class="py">
   <div
     class="container"
     style="
@@ -197,16 +197,21 @@ content %}
     </div>
   </div>
 </section>
-<section class="py-5">
+<section class="py-1">
   <div
     class="container"
     style="
       border-style: solid;
-      border-color: var(--bs-link-color);
+      border-color: var(--bs-success);
       padding: 10px;
       border-radius: 16px;
     "
   >
+    <div class="row" style="border-color: var(--bs-emphasis-color)">
+      <div class="col d-xl-flex justify-content-xl-center">
+        <h1 style="color: var(--bs-success)">Add a connection</h1>
+      </div>
+    </div>
     <div class="row" style="border-color: var(--bs-emphasis-color)">
       <div class="col">
         <section class="position-relative py-1 py-xl-1">
@@ -222,7 +227,7 @@ content %}
                     class="form-control"
                     id="conn_name"
                     type="text"
-                    value="Connection name"
+                    value=""
                     placeholder="Connection name"
                     name="new_conn_name"
                   />
@@ -240,7 +245,7 @@ content %}
                     class="form-control"
                     id="api_id"
                     type="text"
-                    value="API ID"
+                    value=""
                     placeholder="API ID"
                     name="new_conn_api_id"
                   />
@@ -251,7 +256,7 @@ content %}
                     class="form-control"
                     id="api_secret"
                     type="text"
-                    value="API HASH"
+                    value=""
                     placeholder="API HASH"
                     name="new_conn_api_hash"
                   />
