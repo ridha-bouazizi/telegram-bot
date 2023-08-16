@@ -38,6 +38,7 @@
       "type": "python",
       "request": "launch",
       "program": "${file}",
+      "args": ["--phone +21655014722"],
       "console": "integratedTerminal",
       "justMyCode": true,
       // add config for env variable

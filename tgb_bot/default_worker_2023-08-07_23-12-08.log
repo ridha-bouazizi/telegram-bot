@@ -1,0 +1,8 @@
+2023-08-07T23:12:08Z [WARNING]  * Debugger is active!
+2023-08-07T23:12:08Z [INFO]  * Debugger PIN: 143-178-454
+2023-08-07T23:12:14Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:12:14] "GET /connections HTTP/1.1" 200 -
+2023-08-07T23:12:14Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:12:14] "[36mGET /static/bootstrap/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2023-08-07T23:12:14Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:12:14] "[36mGET /static/js/client.js HTTP/1.1[0m" 304 -
+2023-08-07T23:12:14Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:12:14] "[36mGET /static/js/script.min.js HTTP/1.1[0m" 304 -
+2023-08-07T23:12:14Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:12:14] "GET /static/Telegram_logo.svg.webp HTTP/1.1" 200 -
+2023-08-07T23:12:25Z [INFO]  * Detected change in '/home/rbouazizi/telegram-bot/tgb_bot/src/tgb_bot/models.py', reloading

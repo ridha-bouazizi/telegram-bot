@@ -1,0 +1,9 @@
+2023-08-07T20:26:57Z [WARNING]  * Debugger is active!
+2023-08-07T20:26:57Z [INFO]  * Debugger PIN: 467-569-044
+2023-08-07T20:27:42Z [INFO] 172.19.0.1 - - [07/Aug/2023 20:27:42] "[32mGET / HTTP/1.1[0m" 302 -
+2023-08-07T20:27:42Z [INFO] 172.19.0.1 - - [07/Aug/2023 20:27:42] "GET /login HTTP/1.1" 200 -
+2023-08-07T20:27:43Z [INFO] 172.19.0.1 - - [07/Aug/2023 20:27:43] "GET /static/js/client.js HTTP/1.1" 200 -
+2023-08-07T20:27:43Z [INFO] 172.19.0.1 - - [07/Aug/2023 20:27:43] "GET /static/js/script.min.js HTTP/1.1" 200 -
+2023-08-07T20:27:43Z [INFO] 172.19.0.1 - - [07/Aug/2023 20:27:43] "GET /static/bootstrap/css/bootstrap.min.css HTTP/1.1" 200 -
+2023-08-07T20:27:43Z [INFO] 172.19.0.1 - - [07/Aug/2023 20:27:43] "GET /static/Telegram_logo.svg.webp HTTP/1.1" 200 -
+2023-08-07T20:42:13Z [INFO]  * Detected change in '/tgb_bot/src/tgb_bot/bot_tasks.py', reloading

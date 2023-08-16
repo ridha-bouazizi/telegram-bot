@@ -1,11 +1,93 @@
-import time
-from celery import Celery, Task, current_app, shared_task
+import asyncio
+import os
+from pprint import pprint
+from typing import Union
+from flask import current_app
+import redis
+from telethon.sync import TelegramClient, events, functions, types
+from telethon.sessions import StringSession
+from telethon.tl.custom.message import Message
+from celery import Celery, Task, shared_task
+from .models import Connection
+from .nicelogger import NiceLogger
+from .bot_utils import listen_to_sent_code
 
-@shared_task
-def timer(a: int) -> int:
-    # sleep for a seconds printing everu 5 seconds
-    for i in range(a):
-        if i % 5 == 0:
-            print(i)
-        time.sleep(1)
-    return a
+nicelogger = NiceLogger()
+
+celery_app = Celery("tasks", broker="redis://localhost:6379")
+
+
+@celery_app.task(name="sendCode", queue="sendCode")  # type: ignore
+def sendCode(phone: str, conn_id: str) -> str:
+    credentials = {
+        "USER ACCOUNT": {
+            "APP TITLE": "atesttokenfortgb",
+            "APP API ID": 21895560,
+            "APP API HASH": "8b11b3126c84627b78ba9e0e9f3290a8",
+        }
+    }
+    session = ""
+
+    async def main(session=session, phone=phone, conn_id=conn_id):
+        user_account = "USER ACCOUNT"
+        app_title = credentials[user_account]["APP TITLE"]
+        app_api_id = credentials[user_account]["APP API ID"]
+        app_api_hash = credentials[user_account]["APP API HASH"]
+        client = await TelegramClient(StringSession(session), app_api_id, app_api_hash).start(phone=phone, code_callback=listen_to_sent_code()) # type: ignore
+        session = client.session.save()
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+    loop.close()
+    print(f"Session: {session}")
+    return session
+
+
+# the function declared here apply_async(args=[conn_id, mode], queue="refactor")
+@celery_app.task(name="start_refactor", queue="refactor")  # type: ignore
+def start_refactor(conn_id, mode):
+    # Credentials
+    credentials = {
+        "USER ACCOUNT": {
+            "APP TITLE": "atesttokenfortgb",
+            "APP API ID": 21895560,
+            "APP API HASH": "8b11b3126c84627b78ba9e0e9f3290a8",
+        }
+    }
+
+    def load_session_from_file(file_path):
+        with open(file_path, "r") as file:
+            session_string = file.read()
+
+        print(f"Loaded session string: {session_string}")
+        return session_string
+
+    async def main():
+        user_account = "USER ACCOUNT"
+        app_title = credentials[user_account]["APP TITLE"]
+        app_api_id = credentials[user_account]["APP API ID"]
+        app_api_hash = credentials[user_account]["APP API HASH"]
+
+        session_file = "atesttokenfortgb.session"
+
+        # session_string = load_session_from_file(session_file)
+        session_string = ""
+        client = TelegramClient(StringSession(session_string), app_api_id, app_api_hash)
+        async with client:
+            client.start(phone="+21655014722")
+            if not client.is_user_authorized():
+                code = input("Enter the verification code you received: ")
+                # Complete the authentication process with the received code
+                await client.sign_in("+21655014722", code)
+            # @client.on(events.NewMessage)
+            # async def handle_new_message(event):
+            #     from_user = await event.get_sender()
+            #     message_text = event.message.message
+            #     print(f"Received a message from: {from_user.username}")
+            #     print(f"Message text: {message_text}")
+
+            # await client.run_until_disconnected()
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+    loop.close()

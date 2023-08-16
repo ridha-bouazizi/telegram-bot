@@ -7,7 +7,9 @@ from werkzeug.security import generate_password_hash
 
 app = create_app()
 
-celery = start_celery_app(app)
+celery = celery_init_app(app)
+app.app_context().push()
+celery.config_from_object(app.config)
 
 def init_admin_user():
     nicelogger = NiceLogger()

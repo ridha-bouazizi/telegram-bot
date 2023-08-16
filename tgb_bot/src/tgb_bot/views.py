@@ -1,11 +1,13 @@
-from flask import Blueprint, render_template, flash, jsonify, request, redirect, url_for
+from flask import Blueprint, g, render_template, flash, jsonify, request, redirect, url_for
 from flask_login import login_required, current_user
+import pexpect
 from tgb_bot.models import Connection
 from . import db
 import json
 
 views = Blueprint("views", __name__)
 
+child = None
 
 @views.route("/", methods=["GET", "POST"])
 def home():
@@ -37,6 +39,28 @@ def get_connections():
     # Return the connections data as JSON
     return jsonify({"connections": connectionsList})
 
+@views.route("/sendCode", methods=["POST"])  # type: ignore
+# @login_required
+def sendCode():
+    global child
+    phone = request.form.get("phone")
+    command = "python3 /home/rbouazizi/telegram-bot/tgb_bot/src/tgb_bot/testgensession.py --phone " + str(phone)
+    child = pexpect.spawn(command, timeout=300)
+    child.expect("Please enter the code you received: ")
+    g.output = child.before.decode('utf-8')
+    g.child = child
+    return str(g.output) + "We've sent you a code. Please check your Telegram account."
+
+@views.route("/checkCode", methods=["POST"])  # type: ignore
+# @login_required
+def checkCode():
+    global child
+    code = request.args.get("code")
+    child = g.child
+    child.sendline(code)
+    child.expect(pexpect.EOF)
+    output = child.before.decode('utf-8')
+    return output
 
 @views.route("/createConnection", methods=["POST"])  # type: ignore
 @login_required
@@ -235,15 +259,84 @@ def deleteConnection():
     return redirect(url_for("views.connections"))
 
 ## Route for the rules page
-@views.route("/rules", methods=["GET", "POST"])  # type: ignore
+@views.route("/workers", methods=["GET", "POST"])  # type: ignore
 @login_required
 def rules():
     if request.method == "GET":
 
-        return render_template("rules.html", user=current_user)
+        return render_template("workers.html", user=current_user)
     
-# @views.post("/start_sleep") # type: ignore
-# def start_sleep() -> dict[str, object]:
-#     a = request.form.get("a", type=int)
-#     result = timer.delay(a) # type: ignore
-#     return {"result_id": result}
+@views.route("/saveWorkerConfig", methods=["POST"])  # type: ignore
+@login_required
+def saveWorkerConfig():
+    if request.method == "POST":
+        connection_id = request.args.get("connection_id")
+        filters = request.form.get("filters")
+        filtersDict = json.loads(filters)
+        from_to = request.form.get("from_to")
+        from_toDict = json.loads(from_to)
+        worker_settings = request.form.get("worker_settings")
+        worker_settingsDict = json.loads(worker_settings)
+        if connection_id == "":
+            text = "Please select a connection."
+            category = "danger"
+            message = {"text": text, "category": category}
+            return jsonify(message=message)
+        elif name == "" or api_id == "" or api_hash == "" or type == "":
+            text = "Please fill out all fields."
+            category = "danger"
+            message = {"text": text, "category": category}
+            return jsonify(message=message)
+        elif type != "USER" and type != "BOT":
+            text = "Please select a valid connection type."
+            category = "danger"
+            message = {"text": text, "category": category}
+            return jsonify(message=message)
+        else:
+            try:
+                connection = Connection.query.filter_by(id=connection_id).first()
+            except Connection.DoesNotExist:
+                connection = None
+
+            if connection and connection.user_id == current_user.id:
+                if conn_accept_change == "on":
+                    connection.name = name
+                    connection.apiID = api_id
+                    connection.apiSecret = api_hash
+                    connection.type = type
+                    connection.last_modified = db.func.current_timestamp()
+                    try:
+                        db.session.commit()
+                        text = "Connection updated successfully!"
+                        category = "success"
+                        message = {
+                            "text": text,
+                            "category": category,
+                            "last_modified": {
+                                "day": connection.last_modified.day,
+                                "month": connection.last_modified.month,
+                                "year": connection.last_modified.year,
+                                "hour": connection.last_modified.hour,
+                                "minute": connection.last_modified.minute,
+                                "second": connection.last_modified.second,
+                            },
+                        }
+                        return jsonify(message=message)
+                    except Exception as e:
+                        print(e)
+                        text = "Error updating connection."
+                        category = "danger"
+                        message = {"text": text, "category": category}
+                        return jsonify(message=message)
+                else:
+                    text = "Please confirm that you want to update this connection."
+                    category = "danger"
+                    message = {"text": text, "category": category}
+                    return jsonify(message=message)
+
+            else:
+                text = "Connection does not exist."
+                category = "danger"
+                message = {"text": text, "category": category}
+                return jsonify(message=message)
+    return redirect(url_for("views.connections"))

@@ -1,0 +1,49 @@
+2023-08-07T20:26:56Z [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.19.0.2:5000
+2023-08-07T20:26:56Z [INFO] [33mPress CTRL+C to quit[0m
+2023-08-07T20:26:56Z [INFO]  * Restarting with stat
+2023-08-07T20:42:14Z [INFO]  * Restarting with stat
+2023-08-07T20:44:10Z [INFO]  * Restarting with stat
+2023-08-07T20:48:47Z [INFO]  * Restarting with stat
+2023-08-07T20:49:18Z [INFO]  * Restarting with stat
+2023-08-07T20:59:10Z [INFO]  * Restarting with stat
+2023-08-07T20:59:22Z [INFO]  * Restarting with stat
+2023-08-07T21:01:25Z [INFO]  * Restarting with stat
+2023-08-07T21:01:51Z [INFO]  * Restarting with stat
+2023-08-07T21:01:57Z [INFO]  * Restarting with stat
+2023-08-07T21:02:01Z [INFO]  * Restarting with stat
+2023-08-07T21:03:24Z [INFO]  * Restarting with stat
+2023-08-07T21:05:15Z [INFO]  * Restarting with stat
+2023-08-07T21:07:30Z [INFO]  * Restarting with stat
+2023-08-07T21:08:11Z [INFO]  * Restarting with stat
+2023-08-07T21:08:25Z [INFO]  * Restarting with stat
+2023-08-07T21:08:50Z [INFO]  * Restarting with stat
+2023-08-07T21:09:08Z [INFO]  * Restarting with stat
+2023-08-07T21:09:17Z [INFO]  * Restarting with stat
+2023-08-07T21:09:30Z [INFO]  * Restarting with stat
+2023-08-07T21:09:52Z [INFO]  * Restarting with stat
+2023-08-07T21:10:08Z [INFO]  * Restarting with stat
+2023-08-07T21:11:28Z [INFO]  * Restarting with stat
+2023-08-07T21:11:43Z [INFO]  * Restarting with stat
+2023-08-07T21:11:48Z [INFO]  * Restarting with stat
+2023-08-07T21:12:06Z [INFO]  * Restarting with stat
+2023-08-07T21:13:01Z [INFO]  * Restarting with stat
+2023-08-07T21:13:03Z [INFO]  * Restarting with stat
+2023-08-07T21:15:19Z [INFO]  * Restarting with stat
+2023-08-07T21:22:17Z [INFO]  * Restarting with stat
+2023-08-07T21:58:48Z [INFO]  * Restarting with stat
+2023-08-07T21:59:51Z [INFO]  * Restarting with stat
+2023-08-07T22:00:06Z [INFO]  * Restarting with stat
+2023-08-07T22:00:31Z [INFO]  * Restarting with stat
+2023-08-07T22:00:52Z [INFO]  * Restarting with stat
+2023-08-07T22:01:24Z [INFO]  * Restarting with stat
+2023-08-07T22:01:54Z [INFO]  * Restarting with stat
+2023-08-07T22:02:04Z [INFO]  * Restarting with stat
+2023-08-07T22:06:48Z [INFO]  * Restarting with stat
+2023-08-07T22:06:53Z [INFO]  * Restarting with stat
+2023-08-07T22:07:01Z [INFO]  * Restarting with stat
+2023-08-07T22:07:12Z [INFO]  * Restarting with stat
+2023-08-07T22:07:32Z [INFO]  * Restarting with stat
+2023-08-07T22:08:44Z [INFO]  * Restarting with stat

@@ -25,3 +25,15 @@ class Connection(db.Model):
     type = db.Column(db.Enum(ConnectionType), default=ConnectionType.BOT)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     last_modified = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+# class ConnectionRefactorConfig(db.Model):
+
+
+class CeleryTasks():
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.String(150))
+    name = db.Column(db.String(150))
+    status = db.Column(db.String(150))
+    result = db.Column(db.String(150))
+    date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())

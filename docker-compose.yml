@@ -1,0 +1,74 @@
+version: '3.7'
+services:
+    web:
+        build:
+            context: .
+        environment:
+            FLASK_APP: app
+            FLASK_DEBUG: 1
+            TGB_DB_NAME: tgb.db.sqlite
+            TGB_SECRET_KEY: '3PfMNY2Q6zDk+rI2/l4hBTFFT8RqA2OmLg4KCiQ2GdcHUHnWpeP+RZFZnAxOe5GHu/7ke3nBuTwFxjNuyMlmBg=='
+            TGB_INIT_USER_EMAIL: admin@example.com
+            TGB_INIT_USER_PASSWORD: admin
+            TGB_INIT_USER_FIRST_NAME: admin
+            TGB_REDIS_URL: redis://redis:6379
+            TGB_CELERY_DEFAULT_WORKER_NAME: celery@%h
+            TGB_CELERY_WORKER_CONCURRENCY: 8
+        ports:
+        - 5000:5000
+        volumes:
+        - ./tgb_bot:/tgb_bot
+        networks:
+            - tgb_bot_network
+    celery:
+        build:
+            context: .
+        environment:
+            FLASK_APP: app
+            TGB_DB_NAME: tgb.db.sqlite
+            TGB_SECRET_KEY: '3PfMNY2Q6zDk+rI2/l4hBTFFT8RqA2OmLg4KCiQ2GdcHUHnWpeP+RZFZnAxOe5GHu/7ke3nBuTwFxjNuyMlmBg=='
+            TGB_INIT_USER_EMAIL: admin@example.com
+            TGB_INIT_USER_PASSWORD: admin
+            TGB_INIT_USER_FIRST_NAME: admin
+            TGB_REDIS_URL: redis://redis:6379
+            TGB_CELERY_DEFAULT_WORKER_NAME: celery@%h
+            TGB_CELERY_WORKER_CONCURRENCY: 8
+        command: ["celery"]
+        depends_on:
+        - redis
+        - web
+        volumes:
+        - ./tgb_bot:/tgb_bot
+        networks:
+            - tgb_bot_network
+    redis:
+        image: redis:alpine
+        ports:
+            - 6379:6379
+        volumes:
+          - redis_data:/data
+        networks:
+            - tgb_bot_network
+    flower:
+        image: mher/flower
+        environment:
+            - CELERY_BROKER_URL=redis://redis:6379
+            - FLOWER_PORT=5555
+        ports:
+            - 5555:5555
+        volumes:
+          - flower_data:/data
+        depends_on:
+            - redis
+        networks:
+            - tgb_bot_network
+volumes:
+    redis_data:
+        external:
+            name: redis_data
+    flower_data:
+        external:
+            name: flower_data
+networks:
+   tgb_bot_network:
+        external: true

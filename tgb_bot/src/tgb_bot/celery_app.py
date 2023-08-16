@@ -34,28 +34,27 @@ def celery_init_app(app: Flask) -> Celery:
         CELERYD_CONCURRENCY=concurrency,
         CELERYD_PREFETCH_MULTIPLIER=1
     )
-    timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    worker_name = app.config["CELERY_WORKER_NAME"]
-    log_file_name = f"{worker_name}_{timestamp}.log"
-    log_formatter = logging.Formatter(
-        "%(asctime)s [%(levelname)s] %(message)s",
-        "%Y-%m-%dT%H:%M:%SZ"
-    )
-    log_handler = logging.FileHandler(log_file_name)
-    log_handler.setFormatter(log_formatter)
-    log_handler.setLevel(logging.INFO)
-    logging.root.addHandler(log_handler)
+    # timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    # worker_name = app.config["CELERY_DEFAULT_WORKER_NAME"]
+    # log_file_name = f"{worker_name}_{timestamp}.log"
+    # log_formatter = logging.Formatter(
+    #     "%(asctime)s [%(levelname)s] %(message)s",
+    #     "%Y-%m-%dT%H:%M:%SZ"
+    # )
+    # log_handler = logging.FileHandler(log_file_name)
+    # log_handler.setFormatter(log_formatter)
+    # log_handler.setLevel(logging.INFO)
+    # logging.root.addHandler(log_handler)
     # Set up the command-line arguments
-    args = [
-        "worker",
-        "-Q", f"queue_{worker_name}",  # Specify queue name
-        "--concurrency", str(concurrency),  # Adjust the concurrency as needed
-        "--loglevel", "info",
-        "--logfile", "celery.log",
-        "--pidfile", f"pidfile_{worker_name}.pid",  # Specify a pid file per worker
-    ]
-    celery_app.worker_main(args)
-    celery_app.worker_main(args)
+    # args = [
+    #     "worker",
+    #     "-Q", f"queue_{worker_name}",  # Specify queue name
+    #     "--concurrency", str(concurrency),  # Adjust the concurrency as needed
+    #     "--loglevel", "info",
+    #     "--logfile", f"celery_{worker_name}.log",
+    #     "--pidfile", f"pidfile_{worker_name}.pid",  # Specify a pid file per worker
+    # ]
+    # celery_app.worker_main(args)
     app.extensions["celery"] = celery_app
     return celery_app
 

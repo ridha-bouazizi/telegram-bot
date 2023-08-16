@@ -1,0 +1,14 @@
+2023-08-07T23:09:49Z [WARNING]  * Debugger is active!
+2023-08-07T23:09:49Z [INFO]  * Debugger PIN: 143-178-454
+2023-08-07T23:10:40Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:40] "[32mGET / HTTP/1.1[0m" 302 -
+2023-08-07T23:10:40Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:40] "GET /login HTTP/1.1" 200 -
+2023-08-07T23:10:40Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:40] "GET /static/bootstrap/css/bootstrap.min.css HTTP/1.1" 200 -
+2023-08-07T23:10:40Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:40] "GET /static/js/script.min.js HTTP/1.1" 200 -
+2023-08-07T23:10:40Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:40] "GET /static/js/client.js HTTP/1.1" 200 -
+2023-08-07T23:10:47Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:47] "[32mPOST /login HTTP/1.1[0m" 302 -
+2023-08-07T23:10:47Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:47] "[35m[1mGET /connections HTTP/1.1[0m" 500 -
+2023-08-07T23:10:47Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:47] "GET /connections?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2023-08-07T23:10:47Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:47] "GET /connections?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2023-08-07T23:10:47Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:47] "GET /connections?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2023-08-07T23:10:47Z [INFO] 127.0.0.1 - - [07/Aug/2023 23:10:47] "[36mGET /connections?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2023-08-07T23:12:07Z [INFO]  * Detected change in '/home/rbouazizi/telegram-bot/tgb_bot/src/tgb_bot/models.py', reloading

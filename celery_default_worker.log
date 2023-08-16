@@ -1,0 +1,28 @@
+[2023-08-07 15:15:15,020: WARNING/MainProcess] /home/rbouazizi/.cache/pypoetry/virtualenvs/tgb-bot-IKtkagiw-py3.10/lib/python3.10/site-packages/celery/worker/consumer/consumer.py:498: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+[2023-08-07 15:15:15,041: INFO/MainProcess] Connected to redis://localhost:6379//
+[2023-08-07 15:15:15,042: WARNING/MainProcess] /home/rbouazizi/.cache/pypoetry/virtualenvs/tgb-bot-IKtkagiw-py3.10/lib/python3.10/site-packages/celery/worker/consumer/consumer.py:498: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+[2023-08-07 15:15:15,053: INFO/MainProcess] mingle: searching for neighbors
+[2023-08-07 15:15:16,078: INFO/MainProcess] mingle: all alone
+[2023-08-07 15:15:16,116: INFO/MainProcess] celery@rbouazizi-ThinkPad-E590 ready.
+[2023-08-07 15:15:19,603: INFO/MainProcess] Events of group {task} enabled by remote.
+[2023-08-07 15:15:50,709: WARNING/MainProcess] 07-08-2023 15:15:50 |  [+] Admin user already exists!
+[2023-08-07 15:15:50,712: WARNING/MainProcess]  * Serving Flask app 'app.py'
+[2023-08-07 15:15:50,712: WARNING/MainProcess]  * Debug mode: on
+[2023-08-07 15:15:50,713: INFO/MainProcess] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-08-07 15:15:50,713: INFO/MainProcess] [33mPress CTRL+C to quit[0m
+[2023-08-07 15:15:50,979: INFO/MainProcess] 127.0.0.1 - - [07/Aug/2023 15:15:50] "GET /login HTTP/1.1" 200 -
+[2023-08-07 15:15:51,031: INFO/MainProcess] 127.0.0.1 - - [07/Aug/2023 15:15:51] "[36mGET /static/js/script.min.js HTTP/1.1[0m" 304 -
+[2023-08-07 15:15:51,034: INFO/MainProcess] 127.0.0.1 - - [07/Aug/2023 15:15:51] "[36mGET /static/js/client.js HTTP/1.1[0m" 304 -
+[2023-08-07 15:15:51,035: INFO/MainProcess] 127.0.0.1 - - [07/Aug/2023 15:15:51] "[36mGET /static/bootstrap/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+[2023-08-07 15:15:56,030: INFO/MainProcess] 127.0.0.1 - - [07/Aug/2023 15:15:56] "[36mGET /static/Telegram_logo.svg.webp HTTP/1.1[0m" 304 -

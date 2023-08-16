@@ -45,12 +45,13 @@ if "REDIS_URL" in env_vars:
 else:
     env_vars["CELERY_BROKER_URL"] = "redis://localhost:6379"
     env_vars["CELERY_RESULT_BACKEND"] = "redis://localhost:6379"
+    env_vars["REDIS_URL"] = "redis://localhost:6379"
     nicelogger.log("[!] Redis URL not found, using localhost:6379")
-if "CELERY_WORKER_NAME" not in env_vars:
-    env_vars["CELERY_WORKER_NAME"] = "default_worker"
+if "CELERY_DEFAULT_WORKER_NAME" not in env_vars:
+    env_vars["CELERY_DEFAULT_WORKER_NAME"] = "default_worker"
     nicelogger.log("[!] Celery worker name not found, using default_worker")
 if "CELERY_WORKER_CONCURRENCY" not in env_vars:
-    env_vars["CELERY_WORKER_CONCURRENCY"] = 4
+    env_vars["CELERY_WORKER_CONCURRENCY"] = 8 # type: ignore
     nicelogger.log("[!] Celery worker concurrency not found, using 1")
     
 
@@ -67,9 +68,10 @@ def create_app():
     app.config["INIT_USER_EMAIL"] = INIT_USER_EMAIL
     app.config["DB_NAME"] = DB_NAME
     app.config["SECRET_KEY"] = SECRET_KEY
+    app.config["REDIS_URL"] = env_vars["REDIS_URL"]
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
-    app.config["CELERY_WORKER_NAME"] = env_vars["CELERY_WORKER_NAME"]
-    app.config["CELERY_WORKER_CONCURRENCY"] = env_vars["CELERY_WORKER_CONCURRENCY"]
+    app.config["CELERY_DEFAULT_WORKER_NAME"] = env_vars["CELERY_DEFAULT_WORKER_NAME"]
+    app.config["CELERY_WORKER_CONCURRENCY"] = int(env_vars["CELERY_WORKER_CONCURRENCY"])
     app.config.from_mapping(
         CELERY=dict(
             broker_url=env_vars["CELERY_BROKER_URL"],

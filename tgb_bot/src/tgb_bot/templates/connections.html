@@ -1,4 +1,9 @@
-{% extends "base.html" %} {% block title %}Connections{% endblock %} {% block
+{% extends "base.html" %} {% block title %}Connections{% endblock %}
+{% block js_imports %}
+<script src="{{ url_for('static', filename='js/client.js') }}"></script>
+<script src="{{ url_for('static', filename='js/connections.js') }}"></script>
+{%endblock %}
+{% block
 content %}
 
 <section class="py">
@@ -267,7 +272,7 @@ content %}
                     <input
                       class="form-check-input"
                       type="radio"
-                      id="formCheck-4"
+                      id="formCheck-6"
                       name="new_conn_type"
                       checked=""
                       value="BOT"
@@ -294,12 +299,202 @@ content %}
                   <div class="d-lg-flex justify-content-lg-center">
                     <input
                       class="btn btn-primary"
-                      type="submit"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#overlayModal"
                       name="conn_save_edit"
-                      value="Save connection config."
+                      value="Add authn && Save"
                     />
                   </div>
                 </div>
+              </div>
+              <div
+                class="modal fade"
+                id="overlayModal"
+                tabindex="-1"
+                aria-labelledby="overlayModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog" style="max-width: 80%">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="overlayModalLabel">
+                        Select authentication method :
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="container text-center mt-5">
+                        <div class="row d-lg-flex justify-content-lg-start">
+                          <div class="col d-lg-flex justify-content-lg-start">
+                            <div id="conn_auth_dropdown" class="dropdown">
+                              <button
+                                id="conn_auth_button"
+                                class="btn btn-primary dropdown-toggle"
+                                aria-expanded="false"
+                                data-bs-toggle="dropdown"
+                                type="button"
+                              >
+                                Select authentication mechanism: 
+                              </button>
+                              <div class="dropdown-menu">
+                                <a
+                                  id="conn_auth_gss"
+                                  class="dropdown-item"
+                                  href="#"
+                                  >Generate SessionString</a
+                                ><a
+                                  id="conn_auth_ess"
+                                  class="dropdown-item"
+                                  href="#"
+                                  >Enter SessionString</a
+                                ><a
+                                  id="conn_auth_bt"
+                                  class="dropdown-item"
+                                  href="#"
+                                  >Use BotToken</a
+                                ><a
+                                  id="conn_auth_ownpwd"
+                                  class="dropdown-item"
+                                  href="#"
+                                  >Use OwnPassword</a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="horizontal-line" style="margin-bottom: 0px">
+                          <span>Use phone number :</span>
+                        </div>
+                        <div
+                          class="row"
+                          style="margin-right: 0px; margin-left: 0px"
+                        >
+                          <div
+                            class="col d-lg-flex justify-content-lg-center align-items-lg-center col-12"
+                          >
+                            <label
+                              class="form-label"
+                              style="margin-bottom: 0px; margin-right: 5px"
+                              >Phone Number:</label
+                            ><input
+                              id="conn_auth_gss_phone_input"
+                              type="tel"
+                              inputmode="tel"
+                              style="
+                                max-width: 40%;
+                                min-width: 30%;
+                                margin-right: 5px;
+                                margin-left: 5px;
+                              "
+                              placeholder="(e.g. +1234567890)"
+                            /><button
+                              id="conn_auth_gss_send_code"
+                              class="btn btn-dark btn-sm"
+                              type="button"
+                              style="margin-right: 5px; margin-left: 5px"
+                            >
+                              <svg
+                                class="bi bi-send"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1em"
+                                height="1em"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                              >
+                                <path
+                                  d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
+                                ></path>
+                              </svg></button
+                            ><input
+                              id="conn_auth_gss_code_input"
+                              type="password"
+                              inputmode="numeric"
+                              required
+                              minlength="4"
+                              maxlength="20"
+                              style="
+                                margin-right: 5px;
+                                margin-left: 5px;
+                                min-width: 30%;
+                                max-width: 40%;
+                              "
+                              placeholder="(e.g. 1234)"
+                            /><button
+                              id="conn_auth_gss_check_code"
+                              class="btn btn-primary btn-sm"
+                              type="button"
+                              style="margin-right: 5px; margin-left: 5px"
+                            >
+                              <svg
+                                class="bi bi-check-lg"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1em"
+                                height="1em"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                                style="width: 20px; height: 20px"
+                              >
+                                <path
+                                  d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"
+                                ></path>
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          style="
+                            /*width: 30%;*/
+                            height: 1px;
+                            background-color: #000;
+                            position: absolute;
+                            position: relative;
+                            text-align: center;
+                            margin-bottom: 0px;
+                            margin-top: 10px;
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button type="button" class="btn btn-primary">
+                        Save changes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                id="loading-overlay"
+                class="justify-content-lg-center align-items-lg-center" style="display:none;"
+              >
+                <span
+                  id="loading-overlay-text"
+                  class="fs-1"
+                  style="margin-top: 10px; margin-bottom: 10px"
+                  >Please Wait ...</span
+                ><span
+                  class="spinner-border text-light"
+                  role="status"
+                  style="
+                    margin-top: 20px;
+                    margin-bottom: 10px;
+                    width: 64px;
+                    height: 64px;
+                  "
+                ></span>
               </div>
             </form>
           </div>
