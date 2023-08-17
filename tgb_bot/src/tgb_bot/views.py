@@ -39,29 +39,6 @@ def get_connections():
     # Return the connections data as JSON
     return jsonify({"connections": connectionsList})
 
-@views.route("/sendCode", methods=["POST"])  # type: ignore
-# @login_required
-def sendCode():
-    global child
-    phone = request.form.get("phone")
-    command = "python3 /home/rbouazizi/telegram-bot/tgb_bot/src/tgb_bot/testgensession.py --phone " + str(phone)
-    child = pexpect.spawn(command, timeout=300)
-    child.expect("Please enter the code you received: ")
-    g.output = child.before.decode('utf-8')
-    g.child = child
-    return str(g.output) + "We've sent you a code. Please check your Telegram account."
-
-@views.route("/checkCode", methods=["POST"])  # type: ignore
-# @login_required
-def checkCode():
-    global child
-    code = request.args.get("code")
-    child = g.child
-    child.sendline(code)
-    child.expect(pexpect.EOF)
-    output = child.before.decode('utf-8')
-    return output
-
 @views.route("/createConnection", methods=["POST"])  # type: ignore
 @login_required
 def createConnection():

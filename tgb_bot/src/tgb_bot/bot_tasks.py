@@ -10,15 +10,15 @@ from telethon.tl.custom.message import Message
 from celery import Celery, Task, shared_task
 from .models import Connection
 from .nicelogger import NiceLogger
-from .bot_utils import listen_to_sent_code
+from .bot_utils import RedisCodeListener
 
 nicelogger = NiceLogger()
 
 celery_app = Celery("tasks", broker="redis://localhost:6379")
 
 
-@celery_app.task(name="sendCode", queue="sendCode")  # type: ignore
-def sendCode(phone: str, conn_id: str) -> str:
+@celery_app.task(name="sendCode", queue="codeTasks")  # type: ignore
+def handle_sendCode(phone: str, conn_id: str) -> str:
     credentials = {
         "USER ACCOUNT": {
             "APP TITLE": "atesttokenfortgb",
@@ -33,7 +33,12 @@ def sendCode(phone: str, conn_id: str) -> str:
         app_title = credentials[user_account]["APP TITLE"]
         app_api_id = credentials[user_account]["APP API ID"]
         app_api_hash = credentials[user_account]["APP API HASH"]
-        client = await TelegramClient(StringSession(session), app_api_id, app_api_hash).start(phone=phone, code_callback=listen_to_sent_code()) # type: ignore
+        listener = RedisCodeListener(conn_id, timeout=300)
+        # surround in a try catch block
+        
+        client = await TelegramClient(StringSession(session), app_api_id, app_api_hash).start(phone=phone, code_callback=listener) # type: ignore
+        # wait for 10s for the code to be sent
+        await asyncio.sleep(10)
         session = client.session.save()
 
     loop = asyncio.get_event_loop()
@@ -41,6 +46,17 @@ def sendCode(phone: str, conn_id: str) -> str:
     loop.close()
     print(f"Session: {session}")
     return session
+
+@celery_app.task(name="checkCode", queue="codeTasks")  # type: ignore
+def handle_checkCode(phone: str, conn_id: str, code: str) -> str:
+    # async def main(phone=phone, conn_id=conn_id, code=code):
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    r.rpush('sentCodes', f'{conn_id}:{code}')
+
+    # loop = asyncio.get_event_loop()
+    # loop.run_until_complete(main())
+    # loop.close()
+    return code
 
 
 # the function declared here apply_async(args=[conn_id, mode], queue="refactor")
