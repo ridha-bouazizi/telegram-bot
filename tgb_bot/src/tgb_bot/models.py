@@ -20,11 +20,13 @@ class ConnectionType(Enum):
 class Connection(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
+    phone = db.Column(db.String(150))
     apiID = db.Column(db.String(150))
     apiSecret = db.Column(db.String(150))
     type = db.Column(db.Enum(ConnectionType), default=ConnectionType.BOT)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     last_modified = db.Column(db.DateTime, default=db.func.current_timestamp())
+    session = db.Column(db.String(500))
 
 # class ConnectionRefactorConfig(db.Model):
 

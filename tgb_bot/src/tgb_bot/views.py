@@ -39,6 +39,52 @@ def get_connections():
     # Return the connections data as JSON
     return jsonify({"connections": connectionsList})
 
+
+@views.route("/saveConnDetails", methods=["POST"])  # type: ignore
+@login_required
+def saveConnDetails():
+    if request.method == "POST":
+        name = request.form.get("conn_name")
+        phone = request.form.get("conn_phone")
+        api_id = request.form.get("api_id")
+        api_hash = request.form.get("api_secret")
+        type = request.form.get("conn_type")
+        try:
+            connection = Connection.query.filter_by(apiID=api_id).first()
+        except:
+            connection = None
+        if connection:
+            flash("Connection already exists.", category="error")
+            return {"success": False}
+        else:
+            try:
+                connection = Connection.query.filter_by(name=name).first()
+            except:
+                connection = None
+            if connection:
+                flash("Connection already exists.", category="error")
+                return {"success": False}
+            else:
+                last_modified = db.func.current_timestamp()
+                new_connection = Connection(
+                    name=name,
+                    phone=phone,
+                    apiID=api_id,
+                    apiSecret=api_hash,
+                    type=type,
+                    user_id=current_user.id,
+                    last_modified=last_modified,
+                    session="",
+                )
+                try:
+                    db.session.add(new_connection)
+                    db.session.commit()
+                    # Save the id of the new connection in new_conn_id
+                    new_conn_id = new_connection.id
+                    return jsonify({"success": True, "new_conn_id": new_conn_id})
+                except Exception as e:
+                    return jsonify({"success": False})
+
 @views.route("/createConnection", methods=["POST"])  # type: ignore
 @login_required
 def createConnection():
@@ -54,7 +100,7 @@ def createConnection():
         else:
             try:
                 connection = Connection.query.filter_by(name=name).first()
-            except Connection.DoesNotExist:
+            except:
                 connection = None
 
             if connection:
@@ -89,7 +135,7 @@ def getConnection():
         else:
             try:
                 connection = Connection.query.filter_by(id=connection_id).first()
-            except Connection.DoesNotExist:
+            except:
                 connection = None
 
             if connection:
@@ -143,7 +189,7 @@ def updateConnection():
         else:
             try:
                 connection = Connection.query.filter_by(id=connection_id).first()
-            except Connection.DoesNotExist:
+            except:
                 connection = None
 
             if connection and connection.user_id == current_user.id:
@@ -204,7 +250,7 @@ def deleteConnection():
         else:
             try:
                 connection = Connection.query.filter_by(id=connection_id).first()
-            except Connection.DoesNotExist:
+            except:
                 connection = None
 
             if connection and connection.user_id == current_user.id:
@@ -272,7 +318,7 @@ def saveWorkerConfig():
         else:
             try:
                 connection = Connection.query.filter_by(id=connection_id).first()
-            except Connection.DoesNotExist:
+            except:
                 connection = None
 
             if connection and connection.user_id == current_user.id:

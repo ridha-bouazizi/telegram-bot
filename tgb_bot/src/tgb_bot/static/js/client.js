@@ -260,6 +260,7 @@ function showFlashedMessages(messages) {
         messages = [messages];
     }
     // Loop through each flashed message and create the corresponding HTML element
+    alertDiv = undefined;
     messages.forEach((messageData) => {
       const category = messageData['message']['category'];
       const message = messageData['message']['text'];
@@ -275,6 +276,9 @@ function showFlashedMessages(messages) {
       container.insertBefore(alertDiv, container.firstChild);
       container.appendChild(node);
     });
+    if (alertDiv) {
+        alertDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 }
 
 // Function to update the connection list in the dropdown menu

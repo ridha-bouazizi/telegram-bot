@@ -87,6 +87,10 @@
         </div>
       </div>
     </nav>
+    <div class="d-lg-flex justify-content-end">
+      <div id="flashedMessagesToast" class="toast-container">
+      </div>
+    </div>
     <div id="flashedMessages">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %} {% if category ==

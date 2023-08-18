@@ -1,10 +1,8 @@
-{% extends "base.html" %} {% block title %}Connections{% endblock %}
-{% block js_imports %}
+{% extends "base.html" %} {% block title %}Connections{% endblock %} {% block
+js_imports %}
 <script src="{{ url_for('static', filename='js/client.js') }}"></script>
 <script src="{{ url_for('static', filename='js/connections.js') }}"></script>
-{%endblock %}
-{% block
-content %}
+{%endblock %} {% block content %}
 
 <section class="py">
   <div
@@ -227,17 +225,28 @@ content %}
                 style="padding: 10px"
               >
                 <div class="col">
+                  <label class="form-label">Phone Number</label
+                  ><input
+                    class="form-control"
+                    type="text"
+                    placeholder="(e.g +1234567890)"
+                    id="new_conn_phone"
+                    name="new_conn_phone"
+                    inputmode="tel"
+                    required
+                  />
+                </div>
+                <div class="col">
                   <label class="form-label">Connection Name:</label
                   ><input
                     class="form-control"
-                    id="conn_name"
+                    id="new_conn_name"
                     type="text"
                     value=""
                     placeholder="Connection name"
                     name="new_conn_name"
                   />
                 </div>
-                <div class="col"></div>
               </div>
               <hr />
               <div
@@ -248,7 +257,7 @@ content %}
                   <label class="form-label">API ID</label
                   ><input
                     class="form-control"
-                    id="api_id"
+                    id="new_api_id"
                     type="text"
                     value=""
                     placeholder="API ID"
@@ -259,7 +268,7 @@ content %}
                   <label class="form-label">API HASH</label
                   ><input
                     class="form-control"
-                    id="api_secret"
+                    id="new_api_secret"
                     type="text"
                     value=""
                     placeholder="API HASH"
@@ -300,11 +309,19 @@ content %}
                     <input
                       class="btn btn-primary"
                       type="button"
+                      name="new_conn_save"
+                      value="Add authn && Save"
+                      onclick="saveConnectionDetails()"
+                    />
+                    <!-- <input
+                      class="btn btn-primary"
+                      type="button"
                       data-bs-toggle="modal"
                       data-bs-target="#overlayModal"
-                      name="conn_save_edit"
+                      name="new_conn_save"
                       value="Add authn && Save"
-                    />
+                      onclick="saveConnectionDetails()"
+                    /> -->
                   </div>
                 </div>
               </div>
@@ -475,26 +492,6 @@ content %}
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                id="loading-overlay"
-                class="justify-content-lg-center align-items-lg-center" style="display:none;"
-              >
-                <span
-                  id="loading-overlay-text"
-                  class="fs-1"
-                  style="margin-top: 10px; margin-bottom: 10px"
-                  >Please Wait ...</span
-                ><span
-                  class="spinner-border text-light"
-                  role="status"
-                  style="
-                    margin-top: 20px;
-                    margin-bottom: 10px;
-                    width: 64px;
-                    height: 64px;
-                  "
-                ></span>
               </div>
             </form>
           </div>

@@ -4,6 +4,7 @@ from tgb_bot.bot_tasks import handle_checkCode, handle_sendCode, start_refactor
 
 bot_task_routes = Blueprint("bot_task_routes", __name__)
 
+
 @bot_task_routes.post("/start_refactor") # type: ignore
 def refactor() -> dict[str, object]:
     conn_id = request.args.get("conn_id")
