@@ -10,32 +10,44 @@ function enableModifyConnectionForm() {
         // Get the "conn_edit" button element
         var connEditButton = document.querySelector('[name="conn_edit"]');
         
+        var selectedId = null;
+            
+        var dropdownItems = document.querySelectorAll('[name="connections_item"]');
+        dropdownItems.forEach(function(item) {
+            item.addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent default link behavior
+                selectedId = item.getAttribute("id"); // Store the selected ID
+            });
+        });
+
         // Add a click event listener to the "conn_edit" button
         connEditButton.addEventListener("click", function(event) {
             event.preventDefault(); // Prevent the default form submission behavior
-            
-            // Enable the elements with names "conn_name", "conn_api_id", "conn_api_hash", and "conn_type"
-            var elementsToEnable = [
-                "conn_name",
-                "conn_api_id",
-                "conn_api_hash",
-                "conn_save_edit",
-                "conn_accept_change"
-            ];
+            if (selectedId) {
+                // Enable the elements with names "conn_name", "conn_api_id", "conn_api_hash", and "conn_type"
+                var elementsToEnable = [
+                    "conn_name",
+                    "conn_save_edit",
+                    "conn_accept_change",
+                ];
 
-            elementsToEnable.forEach(function(elementName) {
-                var element = document.querySelector(`[name="${elementName}"]`);
-                if (element) {
-                    element.removeAttribute("disabled");
-                    element.removeAttribute("readonly");
-                }
-            });
+                elementsToEnable.forEach(function(elementName) {
+                    var element = document.querySelector(`[name="${elementName}"]`);
+                    if (element) {
+                        element.removeAttribute("disabled");
+                        element.removeAttribute("readonly");
+                    }
+                });
 
-            var connTypeRadios = document.querySelectorAll('[name="conn_type"]');
-            connTypeRadios.forEach(function(radio) {
-                radio.removeAttribute("disabled");
-                radio.removeAttribute("readonly");
-            });
+                var connTypeRadios = document.querySelectorAll('[name="conn_type"]');
+                connTypeRadios.forEach(function(radio) {
+                    radio.removeAttribute("disabled");
+                    radio.removeAttribute("readonly");
+                });
+            }
+            else {
+                showFlashedMessages({ "message": { "category": "danger", "text": "Please select a connection to edit" } });
+            }
         });
     }
 }
@@ -71,6 +83,8 @@ function retrieveConnectionDetails() {
                     document.querySelector('[name="conn_api_id"]').value = data.api_id;
                     document.querySelector('[name="conn_api_hash"]').value = data.api_hash;
                     document.querySelector('[name="conn_type"][value="' + data.type.toUpperCase() + '"]').checked = true;
+                    document.querySelector('[name="phone_number"]').value = data.phone_number;
+                    document.querySelector('[name="conn_edit"]').removeAttribute("disabled");
                 })
                 .catch(function(error) {
                     // Handle errors here
@@ -222,6 +236,7 @@ function deleteConnection() {
                     document.querySelector('[name="conn_date"]').value = "";
                     document.querySelector('[name="conn_api_id"]').value = "";
                     document.querySelector('[name="conn_api_hash"]').value = "";
+                    document.querySelector('[name="phone_number"]').value = "";
                     document.querySelector('[name="conn_type"][value="BOT"]').checked = true;
 
                     // Disable delete, update, and save buttons
@@ -235,6 +250,12 @@ function deleteConnection() {
                     // Delete the connection from dropdown
                     var connectionItem = document.querySelector(`[name="connections_item"][id="${selectedId}"]`);
                     connectionItem.remove();
+                    var checkbox = document.getElementById("formCheck-4");
+
+                    // Uncheck the checkbox
+                    if (checkbox) {
+                        checkbox.checked = false;
+                    }
                     selectedId = null;
 
                 })

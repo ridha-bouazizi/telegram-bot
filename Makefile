@@ -77,6 +77,8 @@ help:
 	@echo "  build           Build Docker images"
 	@echo "  up              Start services in detached mode"
 	@echo "  up-live         Start services without detached mode"
+	@echo "  up-utils        Start utility services in detached mode"
+	@echo "  up-utils-live   Start utility services without detached mode"
 	@echo "  down            Stop and remove services"
 	@echo "  restart         Restart services"
 	@echo "  logs            Show logs for all services"

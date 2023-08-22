@@ -12,18 +12,10 @@ def refactor() -> dict[str, object]:
     result = start_refactor.apply_async(args=[conn_id, mode], queue="refactor")
     return {"result_id": result.id}
 
-@bot_task_routes.post("/sendCode") # type: ignore
-def sendCode() -> None:
-    phone = request.form.get("phone")
-    conn_id = request.args.get("conn_id")
-    result = handle_sendCode.apply_async(args=[phone, conn_id], queue="codeTasks")
-    return {"result_id": result.id}
-
-@bot_task_routes.post("/checkCode")  # type: ignore
+@bot_task_routes.post("/submitCode")  # type: ignore
 # @login_required
-def checkCode():
-    phone = request.form.get("phone")
-    conn_id = request.args.get("conn_id")
+def generateSession():
+    conn_id = request.form.get("conn_id")
     code = request.form.get("code")
-    result = handle_checkCode.apply_async(args=[phone, conn_id, code], queue="codeTasks")
+    result = handle_checkCode.apply_async(args=[conn_id, code], queue="checkCode")
     return {"result_id": result.id}

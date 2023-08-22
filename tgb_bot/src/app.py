@@ -4,12 +4,15 @@ from tgb_bot.celery_app import celery_init_app, start_celery_app
 from tgb_bot.models import User
 from tgb_bot.nicelogger import NiceLogger
 from werkzeug.security import generate_password_hash
+from tgb_bot import app, celery
 
-app = create_app()
+from tgb_bot.bot_utils import TaskHandler
 
-celery = celery_init_app(app)
-app.app_context().push()
+app = app
+
+celery = celery
 celery.config_from_object(app.config)
+task_handler = TaskHandler(celery)
 
 def init_admin_user():
     nicelogger = NiceLogger()

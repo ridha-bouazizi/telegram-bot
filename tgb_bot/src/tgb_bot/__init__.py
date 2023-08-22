@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager, current_user
 from tgb_bot.http_exceptions import Custom302Exception
+
+from .celery_app import celery_init_app
 from .envVars import EnvVars
 from .nicelogger import NiceLogger
 from werkzeug.security import generate_password_hash
@@ -84,9 +86,9 @@ def create_app():
     )
     db.init_app(app)
         
-    from .views import views
-    from .auth import auth
-    from .bot_task_routes import bot_task_routes
+    from tgb_bot.views import views
+    from tgb_bot.auth import auth
+    from tgb_bot.bot_task_routes import bot_task_routes
 
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
@@ -119,3 +121,6 @@ def create_database(app):
         db.create_all(app=app)
         print("Created Database!")
 
+
+app = create_app()
+celery = celery_init_app(app)

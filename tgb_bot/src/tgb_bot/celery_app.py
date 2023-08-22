@@ -34,6 +34,7 @@ def celery_init_app(app: Flask) -> Celery:
         CELERYD_CONCURRENCY=concurrency,
         CELERYD_PREFETCH_MULTIPLIER=1
     )
+    celery_app.conf.update(app.config)
     # timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     # worker_name = app.config["CELERY_DEFAULT_WORKER_NAME"]
     # log_file_name = f"{worker_name}_{timestamp}.log"

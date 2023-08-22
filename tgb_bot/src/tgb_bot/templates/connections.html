@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}Connections{% endblock %} {% block
 js_imports %}
-<script src="{{ url_for('static', filename='js/client.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/client.js') }}"></script> -->
 <script src="{{ url_for('static', filename='js/connections.js') }}"></script>
 {%endblock %} {% block content %}
 
@@ -61,6 +61,18 @@ js_imports %}
                 class="row d-flex justify-content-center"
                 style="padding: 10px"
               >
+                <div class="col">
+                  <label class="form-label">Phone Number:</label
+                  ><input
+                    class="form-control"
+                    type="text"
+                    disabled=""
+                    value=""
+                    placeholder="Phone number"
+                    name="phone_number"
+                    readonly=""
+                  />
+                </div>
                 <div class="col">
                   <label class="form-label">Connection Name:</label
                   ><input
@@ -219,7 +231,7 @@ js_imports %}
       <div class="col">
         <section class="position-relative py-1 py-xl-1">
           <div class="container position-relative">
-            <form action="/createConnection" method="POST">
+            <form id="createConnectionForm" action="/createConnection" method="POST">
               <div
                 class="row d-flex justify-content-center"
                 style="padding: 10px"
@@ -325,7 +337,7 @@ js_imports %}
                   </div>
                 </div>
               </div>
-              <div
+              <!-- <div
                 class="modal fade"
                 id="overlayModal"
                 tabindex="-1"
@@ -492,7 +504,7 @@ js_imports %}
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </form>
           </div>
         </section>

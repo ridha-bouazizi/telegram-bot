@@ -1,13 +1,12 @@
-from flask import Blueprint, g, render_template, flash, jsonify, request, redirect, url_for
+from flask import Blueprint, render_template, flash, jsonify, request, redirect, url_for
 from flask_login import login_required, current_user
-import pexpect
 from tgb_bot.models import Connection
+
+from tgb_bot.bot_tasks import handle_sendCode
 from . import db
 import json
 
 views = Blueprint("views", __name__)
-
-child = None
 
 @views.route("/", methods=["GET", "POST"])
 def home():
@@ -81,7 +80,8 @@ def saveConnDetails():
                     db.session.commit()
                     # Save the id of the new connection in new_conn_id
                     new_conn_id = new_connection.id
-                    return jsonify({"success": True, "new_conn_id": new_conn_id})
+                    result = handle_sendCode.apply_async(args=[new_conn_id], queue="generateSession")
+                    return jsonify({"success": True, "conn_id": new_conn_id})
                 except Exception as e:
                     return jsonify({"success": False})
 
@@ -146,6 +146,8 @@ def getConnection():
                         "api_hash": connection.apiSecret,
                         "type": connection.type.value,
                         "id": connection.id,
+                        "phone_number": connection.phone,
+                        "session": connection.session,
                         "last_modified": {
                             "day": connection.last_modified.day,
                             "month": connection.last_modified.month,
