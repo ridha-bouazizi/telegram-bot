@@ -42,3 +42,7 @@
   top: 30px;
   z-index: 1;
 } */
+.scrollable-div {
+  overflow-y: auto;
+  height: 450px;
+}

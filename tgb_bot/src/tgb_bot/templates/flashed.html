@@ -1,0 +1,133 @@
+<div class="dropdown-menu dropdown-menu-end container dropdown-list animated--grow-in" style="width: 600px; max-width: 600px">
+    <h6 class="dropdown-header">Alerts center</h6>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %} 
+            {% for category, message in messages %}
+                {% if category == 'info' %}
+    <a
+        class="dropdown-item d-inline-flex flex-row align-items-lg-center pt-2"
+        href="#"
+        style="
+            background: var(--bs-dropdown-divider-bg);
+            border-width: 4px;
+            border-color: var(--bs-dropdown-bg);
+            border-top-style: solid;
+            border-bottom-style: solid;
+        "
+    >
+        <div class="mx-1">
+            <svg
+                class="bi bi-info-lg fs-1 text-white text-bg-primary border rounded-circle border-1 border-black"
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+            >
+                <path
+                    d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704l1.323-6.208Zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0Z"
+                ></path>
+            </svg>
+        </div>
+        <div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+            <span><em class="fs-6 text-dark">Italic</em></span>
+            <hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+            <p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+                {{ message }}
+            </p>
+        </div>
+        <div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center" onclick="dismissAlert()">
+            <svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                ></path>
+            </svg>
+        </div> </a
+    >
+                {% elif category == 'success' %}
+    <a
+        class="dropdown-item d-flex align-items-center pt-2"
+        href="#"
+        style="
+            border-width: 4px;
+            border-color: var(--bs-dropdown-bg);
+            border-top-style: solid;
+            border-bottom-style: solid;
+            background: var(--bs-dropdown-divider-bg);
+        "
+    >
+        <div class="mx-1">
+            <svg
+                class="bi bi-check-lg fs-1 text-white text-bg-success border rounded-circle border-1 border-black"
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+            >
+                <path
+                    d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"
+                ></path>
+            </svg>
+        </div>
+        <div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+            <span><em class="fs-6 text-dark">Italic</em></span>
+            <hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+            <p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+                {{ message }}
+            </p>
+        </div>
+        <div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center" onclick="dismissAlert()">
+            <svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                ></path>
+            </svg>
+        </div> </a
+    >
+                {% elif category == 'error' %}
+    <a
+        class="dropdown-item d-flex align-items-center pt-2"
+        href="#"
+        style="
+            border-width: 4px;
+            border-color: var(--bs-dropdown-bg);
+            border-top-style: solid;
+            border-bottom-style: solid;
+            background: var(--bs-dropdown-divider-bg);
+        "
+        name="alertNotification"
+    >
+        <div class="mx-1">
+            <svg
+                class="bi bi-exclamation-lg fs-1 text-white text-bg-danger border rounded-circle border-1 border-black"
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+            >
+                <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"></path>
+            </svg>
+        </div>
+        <div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+            <span><em class="fs-6 text-dark">Italic</em></span>
+            <hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+            <p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+                {{ message }}
+            </p>
+        </div>
+        <div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center" onclick="dismissAlert()">
+            <svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                ></path>
+            </svg>
+        </div> </a
+    >
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <a class="dropdown-item text-center pt-2 small text-gray-500" href="#">Clear all</a>
+</div>

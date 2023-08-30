@@ -273,35 +273,6 @@ function deleteConnection() {
     }
 }
 
-// Function to show flashed messages
-function showFlashedMessages(messages) {
-    // Get the container element to display the flashed messages
-    const container = document.getElementById("flashedMessages");
-    if (!Array.isArray(messages)) {
-        messages = [messages];
-    }
-    // Loop through each flashed message and create the corresponding HTML element
-    alertDiv = undefined;
-    messages.forEach((messageData) => {
-      const category = messageData['message']['category'];
-      const message = messageData['message']['text'];
-      const alertDiv = document.createElement("div");
-      alertDiv.classList.add("alert", `alert-${category}`, "alert-dismissible", "fade", "show");
-      alertDiv.setAttribute("role", "alert");
-      alertDiv.innerHTML = `${message}
-        <button type="button" class="close" data-dismiss="alert">
-          <span aria-hidden="true">&times;</span>
-        </button>`;
-      const node = document.createElement("div");
-      node.appendChild(alertDiv);
-      container.insertBefore(alertDiv, container.firstChild);
-      container.appendChild(node);
-    });
-    if (alertDiv) {
-        alertDiv.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-}
-
 // Function to update the connection list in the dropdown menu
 function updateConnectionList(data) {
     var dropdownMenu = document.querySelector(".dropdown-menu");

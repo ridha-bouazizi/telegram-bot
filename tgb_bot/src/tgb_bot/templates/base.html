@@ -1,145 +1,380 @@
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <link
-      rel="shortcut icon"
-      href="{{ url_for('static', filename='Telegram_logo.svg.webp') }}"
-    />
-    <title>{% block title %}Login - TGB{% endblock %}</title>
-    <meta
-      property="og:image"
-      content="{{ url_for('static', filename='img/Telegram_logo.svg.webp') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap"
-    />
-    {% block js_imports %} {%
-      endblock %}
-    {% block css_imports %} {%
-      endblock %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.min.css') }}" />
-  </head>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+		<link rel="shortcut icon" href="{{ url_for('static', filename='Telegram_logo.svg.webp') }}" />
+		<title>{% block title %}Login - TGB{% endblock %}</title>
+		<meta property="og:image" content="{{ url_for('static', filename='img/Telegram_logo.svg.webp') }}" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap" />
+		{% block js_imports %} {% endblock %} {% block css_imports %} {% endblock %}
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.min.css') }}" />
+		<script src="{{ url_for('static', filename='js/client.js') }}"></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+	</head>
 
-  <body>
-    <nav
-      class="navbar navbar-expand-md sticky-top navbar-shrink py-3 navbar-light"
-      id="mainNav"
-      style="padding: 5px 0px"
-    >
-      <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="/"
-          ><span
-            class="bs-icon-sm bs-icon-circle bs-icon-primary shadow d-flex justify-content-center align-items-center me-2 bs-icon"
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1em"
-              height="1em"
-              fill="currentColor"
-              viewBox="0 0 16 16"
-              class="bi bi-telegram"
-            >
-              <path
-                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"
-              ></path></svg></span
-          ><span>Telegram bot</span></a
-        ><button
-          data-bs-toggle="collapse"
-          class="navbar-toggler"
-          data-bs-target="#navcol-1"
-        >
-          <span class="visually-hidden">Toggle navigation</span
-          ><span class="navbar-toggler-icon"></span>
-        </button>
-        <div
-          class="collapse navbar-collapse d-xl-flex justify-content-xl-end"
-          id="navcol-1"
-        >
-          {% if user and user.is_authenticated %}
-          <ul class="navbar-nav mx-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/connections">Connections</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/workers">Rules</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/settings">Settings</a>
-            </li>
-          </ul>
-          <a class="btn btn-primary shadow" role="button" href="/logout" style="margin-left: auto;"
-            >Logout</a
-          >
-          {% else %}
-          <a class="btn btn-primary shadow" role="button" href="/login" style="margin-left: auto;"
-            >Login</a
-          >
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-    <div class="d-lg-flex justify-content-end">
-      <div id="flashedMessagesToast" class="toast-container">
-      </div>
-    </div>
-    <div id="flashedMessages">
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% for category, message in messages %} {% if category ==
-      'error' %}
-      <div class="alert alert-danger alter-dismissable fade show" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      {% else %}
-      <div class="alert alert-success alter-dismissable fade show" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      {% endif %} {% endfor %} {% endif %} {% endwith %} 
-    </div>
-    {% block content %} {%
-      endblock %}
+	<body>
+		<nav class="navbar navbar-expand-md sticky-top navbar-shrink py-3 navbar-light" id="mainNav" style="padding: 5px 0px">
+			<div class="container">
+				<a class="navbar-brand d-flex align-items-center" href="/"
+					><span class="bs-icon-sm bs-icon-circle bs-icon-primary shadow d-flex justify-content-center align-items-center me-2 bs-icon"
+						><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-telegram">
+							<path
+								d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"
+							></path></svg></span
+					><span>Telegram bot</span></a
+				><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
+					<span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navcol-1">
+					{% if user and user.is_authenticated %}
+					<ul class="navbar-nav mx-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="/connections">Connections</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/workers">Rules</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/settings">Settings</a>
+						</li>
+					</ul>
+					<nav class="navbar navbar-expand-md topbar static-top navbar-light" style="width: 80px;">
+						<div class="container-fluid">
+							<ul class="navbar-nav flex-nowrap ms-auto">
+								<li class="nav-item dropdown no-arrow">
+									<div class="nav-item dropdown no-arrow">
+										{% with messages = get_flashed_messages(with_categories=true) %}
+										<a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"
+											><span class="badge bg-danger badge-counter" id="alertsCount">{{ messages|length }}+</span><i class="fas fa-bell fa-fw"></i
+										></a>
+										{% endwith %}
+										<div class="dropdown-menu dropdown-menu-end container dropdown-list animated--grow-in" style="width: 600px; max-width: 600px">
+											<h6 class="dropdown-header">Alerts center</h6>
+											<div id="notifCenter" class="scrollable-div">
+											{% with messages = get_flashed_messages(with_categories=true) %}
+												{% if messages %} 
+													{% for category, message in messages %}
+													
+														{% if category == 'info' %}
+											<a
+												class="dropdown-item d-inline-flex flex-row align-items-lg-center pt-2"
+												href="#"
+												style="
+													background: var(--bs-dropdown-divider-bg);
+													border-width: 4px;
+													border-color: var(--bs-dropdown-bg);
+													border-top-style: solid;
+													border-bottom-style: solid;
+												"
+												name="alertNotification"
+											>
+												<div class="mx-1">
+													<svg
+														class="bi bi-info-lg fs-1 text-white text-bg-primary border rounded-circle border-1 border-black"
+														xmlns="http://www.w3.org/2000/svg"
+														width="1em"
+														height="1em"
+														fill="currentColor"
+														viewBox="0 0 16 16"
+													>
+														<path
+															d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704l1.323-6.208Zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0Z"
+														></path>
+													</svg>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+													<span><em class="fs-6 text-dark">${new Date().toLocaleString();}</em></span>
+													<hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+													<p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+														{{ message }}
+													</p>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center" onclick="dismissAlert('{{ loop.index0 }}')">
+													<svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+														<path
+															d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+														></path>
+													</svg>
+												</div> </a
+											>
+														{% elif category == 'success' %}
+											<a
+												class="dropdown-item d-flex align-items-center pt-2"
+												href="#"
+												style="
+													border-width: 4px;
+													border-color: var(--bs-dropdown-bg);
+													border-top-style: solid;
+													border-bottom-style: solid;
+													background: var(--bs-dropdown-divider-bg);
+												"
+												name="alertNotification"
+											>
+												<div class="mx-1">
+													<svg
+														class="bi bi-check-lg fs-1 text-white text-bg-success border rounded-circle border-1 border-black"
+														xmlns="http://www.w3.org/2000/svg"
+														width="1em"
+														height="1em"
+														fill="currentColor"
+														viewBox="0 0 16 16"
+													>
+														<path
+															d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"
+														></path>
+													</svg>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+													<span><em class="fs-6 text-dark">${new Date().toLocaleString();}</em></span>
+													<hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+													<p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+														{{ message }}
+													</p>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center" onclick="dismissAlert('{{ loop.index0 }}')">
+													<svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+														<path
+															d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+														></path>
+													</svg>
+												</div> </a
+											>
+														{% elif category == 'error' %}
+											<a
+												class="dropdown-item d-flex align-items-center pt-2"
+												href="#"
+												style="
+													border-width: 4px;
+													border-color: var(--bs-dropdown-bg);
+													border-top-style: solid;
+													border-bottom-style: solid;
+													background: var(--bs-dropdown-divider-bg);
+												"
+												name="alertNotification"
+											>
+												<div class="mx-1">
+													<svg
+														class="bi bi-exclamation-lg fs-1 text-white text-bg-danger border rounded-circle border-1 border-black"
+														xmlns="http://www.w3.org/2000/svg"
+														width="1em"
+														height="1em"
+														fill="currentColor"
+														viewBox="0 0 16 16"
+													>
+														<path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"></path>
+													</svg>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+													<span><em class="fs-6 text-dark">{new Date().toLocaleString();}</em></span>
+													<hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+													<p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+														{{ message }}
+													</p>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center" onclick="dismissAlert('{{ loop.index0 }}')">
+													<svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+														<path
+															d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+														></path>
+													</svg>
+												</div> </a
+											>
+														{% endif %}
+													{% endfor %}
+												{% endif %}
+											{% endwith %}
+											</div>
+											<a class="dropdown-item text-center pt-2 small text-gray-500" href="#" onclick="dismissAllAlerts()">Clear all</a>
+										</div>
+										<!-- <div class="dropdown-menu dropdown-menu-end container dropdown-list animated--grow-in" style="width: 600px; max-width: 600px">
+											<h6 class="dropdown-header">Alerts center</h6>
+											<a
+												class="dropdown-item d-inline-flex flex-row align-items-lg-center pt-2"
+												href="#"
+												style="
+													background: var(--bs-dropdown-divider-bg);
+													border-width: 4px;
+													border-color: var(--bs-dropdown-bg);
+													border-top-style: solid;
+													border-bottom-style: solid;
+												"
+											>
+												<div class="mx-1">
+													<svg
+														class="bi bi-info-lg fs-1 text-white text-bg-primary border rounded-circle border-1 border-black"
+														xmlns="http://www.w3.org/2000/svg"
+														width="1em"
+														height="1em"
+														fill="currentColor"
+														viewBox="0 0 16 16"
+													>
+														<path
+															d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704l1.323-6.208Zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0Z"
+														></path>
+													</svg>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+													<span><em class="fs-6 text-dark">Italic</em></span>
+													<hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+													<p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in eros consectetur, eleifend elit ac, vulputate lorem. Vivamus id dui sit amet ipsum
+														tristique faucibus eu a lorem. Vestibulum convallis nisl sed nisi venenatis, at lacinia elit euismod. Nam venenatis, quam sed fermentum bibendum, metus
+														ex scelerisque metus, ac tincidunt mauris velit nec nunc.
+													</p>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center">
+													<svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+														<path
+															d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+														></path>
+													</svg>
+												</div> </a
+											><a
+												class="dropdown-item d-flex align-items-center pt-2"
+												href="#"
+												style="
+													border-width: 4px;
+													border-color: var(--bs-dropdown-bg);
+													border-top-style: solid;
+													border-bottom-style: solid;
+													background: var(--bs-dropdown-divider-bg);
+												"
+											>
+												<div class="mx-1">
+													<svg
+														class="bi bi-check-lg fs-1 text-white text-bg-success border rounded-circle border-1 border-black"
+														xmlns="http://www.w3.org/2000/svg"
+														width="1em"
+														height="1em"
+														fill="currentColor"
+														viewBox="0 0 16 16"
+													>
+														<path
+															d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"
+														></path>
+													</svg>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+													<span><em class="fs-6 text-dark">Italic</em></span>
+													<hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+													<p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in eros consectetur, eleifend elit ac, vulputate lorem. Vivamus id dui sit amet ipsum
+														tristique faucibus eu a lorem. Vestibulum convallis nisl sed nisi venenatis, at lacinia elit euismod. Nam venenatis, quam sed fermentum bibendum, metus
+														ex scelerisque metus, ac tincidunt mauris velit nec nunc.
+													</p>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center">
+													<svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+														<path
+															d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+														></path>
+													</svg>
+												</div> </a
+											><a
+												class="dropdown-item d-flex align-items-center pt-2"
+												href="#"
+												style="
+													border-width: 4px;
+													border-color: var(--bs-dropdown-bg);
+													border-top-style: solid;
+													border-bottom-style: solid;
+													background: var(--bs-dropdown-divider-bg);
+												"
+											>
+												<div class="mx-1">
+													<svg
+														class="bi bi-exclamation-lg fs-1 text-white text-bg-danger border rounded-circle border-1 border-black"
+														xmlns="http://www.w3.org/2000/svg"
+														width="1em"
+														height="1em"
+														fill="currentColor"
+														viewBox="0 0 16 16"
+													>
+														<path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"></path>
+													</svg>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start mx-1 container" style="max-width: 500px; min-width: 300px">
+													<span><em class="fs-6 text-dark">Italic</em></span>
+													<hr style="width: 100%; color: var(--bs-emphasis-color); margin-top: 0px; margin-bottom: 0px; border-width: 4px" />
+													<p class="text-truncate fs-5 text-dark pt-1" style="margin-bottom: 0px; width: 100%">
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in eros consectetur, eleifend elit ac, vulputate lorem. Vivamus id dui sit amet ipsum
+														tristique faucibus eu a lorem. Vestibulum convallis nisl sed nisi venenatis, at lacinia elit euismod. Nam venenatis, quam sed fermentum bibendum, metus
+														ex scelerisque metus, ac tincidunt mauris velit nec nunc.
+													</p>
+												</div>
+												<div class="d-inline-flex flex-column justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center">
+													<svg class="bi bi-x fs-1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+														<path
+															d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+														></path>
+													</svg>
+												</div> </a
+											><a class="dropdown-item text-center pt-2 small text-gray-500" href="#">Clear all</a>
+										</div> -->
+									</div>
+								</li>
+							</ul>
+						</div>
+					</nav>
+					<a class="btn btn-primary shadow" role="button" href="/logout" style="margin-left: auto">Logout</a>
+					{% else %}
+					<a class="btn btn-primary shadow" role="button" href="/login" style="margin-left: auto">Login</a>
+					{% endif %}
+				</div>
+			</div>
+		</nav>
+		<div class="d-lg-flex justify-content-end">
+			<div id="flashedMessagesToast" class="toast-container"></div>
+		</div>
+		<div id="flashedMessages">
+			{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %} {% if category == 'error' %}
+			<div class="alert alert-danger alter-dismissable fade show" role="alert">
+				{{ message }}
+				<button type="button" class="close" data-dismiss="alert">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			{% else %}
+			<div class="alert alert-success alter-dismissable fade show" role="alert">
+				{{ message }}
+				<button type="button" class="close" data-dismiss="alert">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			{% endif %} {% endfor %} {% endif %} {% endwith %}
+		</div>
+		{% block content %} {% endblock %}
 
-    <footer class="bg-primary-gradient">
-      <div class="container py-4 py-lg-5">
-        <hr />
-        <div
-          class="text-muted d-flex justify-content-between align-items-center pt-3"
-        >
-          <p class="mb-0">Copyright © 2023 TGB</p>
-        </div>
-      </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.min.js') }}"></script>
+		<footer class="bg-primary-gradient">
+			<div class="container py-4 py-lg-5">
+				<hr />
+				<div class="text-muted d-flex justify-content-between align-items-center pt-3">
+					<p class="mb-0">Copyright © 2023 TGB</p>
+				</div>
+			</div>
+		</footer>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="{{ url_for('static', filename='js/script.min.js') }}"></script>
 
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+		<script
+			src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+			crossorigin="anonymous"
+		></script>
+	</body>
 </html>
