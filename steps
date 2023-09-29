@@ -1,5 +1,9 @@
 run app (dev mode) : poetry run flask run --debug
-run celery worker: poetry run celery -A app.celery --broker redis://127.0.0.1:6379 worker -Q \
-                    generateSession,checkCode\
+run celery worker: |
+                    poetry run celery -A app.celery --broker redis://127.0.0.1:6379 worker \
+                    -Q generateSession,checkCode,messageListeners \
                     --loglevel DEBUG
 run app (prod mode) : poetry run gunicorn -w 4 -b
+
+Sqlite query to delete from connection_refactor_config where id = 1:
+DELETE FROM connection_refactor_config WHERE id = 1;

@@ -1,4 +1,5 @@
 import asyncio
+import json
 import os
 from pprint import pprint
 from typing import Union
@@ -11,13 +12,16 @@ from telethon.tl.custom.message import Message
 from celery import Celery, Task, shared_task
 
 from .envVars import EnvVars
-from .models import Connection
+from .models import Connection, ConnectionRefactorConfig
 from .nicelogger import NiceLogger
-from .bot_utils import RedisCodeListener
+from .bot_utils import ConnectionDetailsChecker, RedisCodeListener
 from . import db
+import logging
 
 nicelogger = NiceLogger()
 env_vars = EnvVars.get_env_vars().env_vars
+logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
+                    level=logging.WARNING)
 
 if "REDIS_URL" in env_vars:
     redis_url = env_vars["REDIS_URL"]
@@ -106,52 +110,68 @@ def handle_checkCode(conn_id: str, code: str) -> Union[str, int]:
     # loop.run_until_complete(main())
     # loop.close()
 
+@celery_app.task(name="startMessageListener")  # type: ignore
+def startMessageListener(conn_id: str):
+    connection = Connection.query.filter_by(id=conn_id).first()
+    status = ""
+    success = False
+    if connection is None:
+        status = "Connection not found"
+        return status, success
+    else:
+        connectionRefactorConfig = ConnectionRefactorConfig.query.filter_by(connection_id=conn_id).first()
+        async def main(connection=connection, connectionRefactorConfig=connectionRefactorConfig):
+            client = TelegramClient(StringSession(connection.session), connection.apiID, connection.apiSecret) # type: ignore
+            await client.connect()
+            refactorConfig = json.loads(connectionRefactorConfig.config)
+            fromName = refactorConfig["from_to"]["from"]
+            toName = refactorConfig["from_to"]["to"]
+            fromChannel = await client.get_entity(fromName)
+            toChannel = await client.get_entity(toName)
+            # await client.send_message(toChannel, "---[Bot started]---")
+            nicelogger.log(f"[*] Bot started. Listening for messages from {fromName}:{fromChannel.id} to forward to {toName}:{toChannel.id} ...")
+            # Start listening for messages from the fromChannel to forward to the toChannel indefinitely
+            @client.on(events.NewMessage(from_users=fromChannel.id))
+            async def newMessageHandler(event):
+                # check if event is indeed a NewMessage event
+                if isinstance(event, events.NewMessage.Event):
+                    r = redis.Redis(host='localhost', port=6379, db=10)
+                    r.rpush(f'rawMessages:{conn_id}', f'{event.message.raw_text}')
+            client.add_event_handler(newMessageHandler)
+            await client.start() # type: ignore
+            await client.run_until_disconnected() # type: ignore
+        
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+        loop.close()
 
-# the function declared here apply_async(args=[conn_id, mode], queue="refactor")
-@celery_app.task(name="start_refactor", queue="refactor")  # type: ignore
-def start_refactor(conn_id, mode):
-    # Credentials
-    credentials = {
-        "USER ACCOUNT": {
-            "APP TITLE": "atesttokenfortgb",
-            "APP API ID": 21895560,
-            "APP API HASH": "8b11b3126c84627b78ba9e0e9f3290a8",
-        }
-    }
-
-    def load_session_from_file(file_path):
-        with open(file_path, "r") as file:
-            session_string = file.read()
-
-        print(f"Loaded session string: {session_string}")
-        return session_string
-
-    async def main():
-        user_account = "USER ACCOUNT"
-        app_title = credentials[user_account]["APP TITLE"]
-        app_api_id = credentials[user_account]["APP API ID"]
-        app_api_hash = credentials[user_account]["APP API HASH"]
-
-        session_file = "atesttokenfortgb.session"
-
-        # session_string = load_session_from_file(session_file)
-        session_string = ""
-        client = TelegramClient(StringSession(session_string), app_api_id, app_api_hash)
-        async with client:
-            client.start(phone="+21655014722")
-            if not client.is_user_authorized():
-                code = input("Enter the verification code you received: ")
-                # Complete the authentication process with the received code
-                await client.sign_in("+21655014722", code)
-            # @client.on(events.NewMessage)
-            # async def handle_new_message(event):
-            #     from_user = await event.get_sender()
-            #     message_text = event.message.message
-            #     print(f"Received a message from: {from_user.username}")
-            #     print(f"Message text: {message_text}")
-
-            # await client.run_until_disconnected()
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
-    loop.close()
+@celery_app.task(name="startMessageRefactorer")  # type: ignore
+def startMessageRefactorer(conn_id: str):
+    connection = Connection.query.filter_by(id=conn_id).first()
+    status = ""
+    success = False
+    if connection is None:
+        status = "Connection not found"
+        return status, success
+    else:
+        connectionRefactorConfig = ConnectionRefactorConfig.query.filter_by(connection_id=conn_id).first()
+        refactoringKeywords = connectionRefactorConfig.refactoring_keywords
+        async def main(connection=connection, connectionRefactorConfig=connectionRefactorConfig):
+            client = TelegramClient(StringSession(connection.session), connection.apiID, connection.apiSecret)
+            await client.connect()
+            refactorConfig = json.loads(connectionRefactorConfig.config)
+            toName = refactorConfig["from_to"]["to"]
+            toChannel = await client.get_entity(toName)            
+            while True:
+                r = redis.Redis(host='localhost', port=6379, db=10)
+                rawMessage = r.lpop(f'rawMessages:{conn_id}')
+                if rawMessage is not None:
+                    rawMessage = rawMessage.decode('utf-8')
+                    rawMessageLines = rawMessage.split("\n")
+                    try:
+                        # if refactorConfig["worker_settings"]["clear_empty_lines"]:
+                        #     rawMessage = rawMessage.replace("\n\n", "\n")
+                        # refactoredMessage = refactor(refactorConfig, rawMessage)
+                        await client.send_message(toChannel, rawMessage)
+                    except Exception as e:
+                        print(f"Error: {e}")

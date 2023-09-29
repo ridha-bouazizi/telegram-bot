@@ -38,6 +38,13 @@ def init_admin_user():
 
 with app.app_context():
     init_admin_user()
+
+worker = celery.WorkController(app=celery, concurrency=1, loglevel="DEBUG")
+try:
+    worker.start()
+except KeyboardInterrupt:
+    print("Exiting...")
+    worker.stop()
     
 
 if __name__ == '__main__':

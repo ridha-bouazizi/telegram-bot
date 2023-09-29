@@ -17,7 +17,7 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
 	</head>
 
-	<body>
+	<body class="d-flex flex-column min-vh-100">
 		<nav class="navbar navbar-expand-md sticky-top navbar-shrink py-3 navbar-light" id="mainNav" style="padding: 5px 0px">
 			<div class="container">
 				<a class="navbar-brand d-flex align-items-center" href="/"
@@ -37,10 +37,10 @@
 							<a class="nav-link" href="/connections">Connections</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/workers">Rules</a>
+							<a class="nav-link" href="/rules">Rules</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/settings">Settings</a>
+							<a class="nav-link" href="/workers">Workers</a>
 						</li>
 					</ul>
 					<nav class="navbar navbar-expand-md topbar static-top navbar-light" style="width: 80px;">
@@ -321,9 +321,9 @@
 							</ul>
 						</div>
 					</nav>
-					<a class="btn btn-primary shadow" role="button" href="/logout" style="margin-left: auto">Logout</a>
+					<a class="btn btn-primary shadow" role="button" href="/logout" style="margin-left: 20px">Logout</a>
 					{% else %}
-					<a class="btn btn-primary shadow" role="button" href="/login" style="margin-left: auto">Login</a>
+					<a class="btn btn-primary shadow" role="button" href="/login" style="margin-left: 20px">Login</a>
 					{% endif %}
 				</div>
 			</div>
@@ -349,8 +349,9 @@
 			{% endif %} {% endfor %} {% endif %} {% endwith %}
 		</div>
 		{% block content %} {% endblock %}
-
-		<footer class="bg-primary-gradient">
+		{% block script %}
+		{% endblock %}
+		<footer class="bg-primary-gradient mt-auto">
 			<div class="container py-4 py-lg-5">
 				<hr />
 				<div class="text-muted d-flex justify-content-between align-items-center pt-3">

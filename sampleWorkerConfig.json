@@ -1,0 +1,63 @@
+{
+	"from_to": {
+		"from": "https://t.me/+ilRck1p5mPE2ZmI0",
+		"to": "https://t.me/+UwdebjdzPds1Mjk0"
+	},
+	"filters": {
+		"rgx": [
+			{
+				"value": {
+					"dqsdqs": [
+						{
+							"6": ""
+						}
+					]
+				},
+				"priority": "1"
+			},
+			{
+				"value": {
+					"qsdqsd": [
+						{
+							"6": ""
+						}
+					]
+				},
+				"priority": "3"
+			},
+			{
+				"value": {
+					"sqdqsdqsd": [
+						{
+							"5": "jghjghj"
+						}
+					]
+				},
+				"priority": "2"
+			},
+			{
+				"value": {
+					"qsdqsdqsd": [
+						{
+							"7": ",;:"
+						}
+					]
+				},
+				"priority": "4"
+			}
+		],
+		"cs": [],
+		"ci": []
+	},
+	"worker_settings": {
+		"mode": {
+			"mode": "LIVE",
+			"block": false,
+			"block_save_log": false
+		},
+		"block": {},
+		"run_state": {
+			"run": "INFINITE"
+		}
+	}
+}

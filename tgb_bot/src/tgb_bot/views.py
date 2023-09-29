@@ -1,13 +1,15 @@
 from flask import Blueprint, render_template, flash, jsonify, request, redirect, url_for
 from flask_login import login_required, current_user
-from tgb_bot.models import Connection
+from tgb_bot.models import Connection, ConnectionRefactorConfig, ConnectionWorker, WorkerStatus, WorkerType
 
 from tgb_bot.bot_tasks import handle_sendCode
+
+from tgb_bot.nicelogger import NiceLogger
 from . import db
 import json
 
 views = Blueprint("views", __name__)
-
+niceLogger = NiceLogger()
 @views.route("/", methods=["GET", "POST"])
 def home():
     if current_user.is_authenticated:
@@ -284,84 +286,161 @@ def deleteConnection():
     return redirect(url_for("views.connections"))
 
 ## Route for the rules page
-@views.route("/workers", methods=["GET", "POST"])  # type: ignore
+@views.route("/rules", methods=["GET", "POST"])  # type: ignore
 @login_required
 def rules():
     if request.method == "GET":
 
-        return render_template("workers.html", user=current_user)
+        return render_template("rules.html", user=current_user)
     
 @views.route("/saveWorkerConfig", methods=["POST"])  # type: ignore
 @login_required
 def saveWorkerConfig():
     if request.method == "POST":
         connection_id = request.args.get("connection_id")
-        filters = request.form.get("filters")
-        filtersDict = json.loads(filters)
-        from_to = request.form.get("from_to")
-        from_toDict = json.loads(from_to)
-        worker_settings = request.form.get("worker_settings")
-        worker_settingsDict = json.loads(worker_settings)
+        conn_config = json.loads(request.form.get("conn_config"))
+        # Check if conn_config is in the format :
+        # {
+        #     "from_to": {
+        #         "from": "wxcwxcwxc",
+        #         "to": "wxcwxcwxc"
+        #     },
+        #     "filters": {
+        #         "rgx": {
+        #             "iopiop": [
+        #                 {
+        #                     "9": ""
+        #                 },
+        #                 {
+        #                     "6": ""
+        #                 },
+        #                 {
+        #                     "7": ",;:"
+        #                 }
+        #             ],
+        #             "kjljkljkl": [
+        #                 {
+        #                     "1": ""
+        #                 }
+        #             ]
+        #         },
+        #         "cs": {
+        #             "sdfsdf": [
+        #                 {
+        #                     "2": ""
+        #                 }
+        #             ]
+        #         },
+        #         "ci": {
+        #             "azeazeaze": [
+        #                 {
+        #                     "4": "dsfsdfsdf"
+        #                 },
+        #                 {}
+        #             ]
+        #         }
+        #     },
+        #     "worker_settings": {
+        #         "mode": {
+        #             "mode": "LIVE",
+        #             "block": false,
+        #             "block_save_log": false
+        #         },
+        #         "block": {},
+        #         "run_state": {
+        #             "run": "INFINITE"
+        #         }
+        #     }
+        # }
         if connection_id == "":
-            text = "Please select a connection."
-            category = "danger"
-            message = {"text": text, "category": category}
-            return jsonify(message=message)
-        elif name == "" or api_id == "" or api_hash == "" or type == "":
-            text = "Please fill out all fields."
-            category = "danger"
-            message = {"text": text, "category": category}
-            return jsonify(message=message)
-        elif type != "USER" and type != "BOT":
-            text = "Please select a valid connection type."
-            category = "danger"
-            message = {"text": text, "category": category}
-            return jsonify(message=message)
+            flash("Please select a connection.", category="error")
+        elif conn_config == {}:
+            flash("Please fill out all fields.", category="error")
+        elif type(conn_config) != dict:
+            flash("Invalid worker config.", category="error")
+        elif "from_to" not in conn_config or "filters" not in conn_config or "worker_settings" not in conn_config:
+            flash("Invalid worker config.", category="error")
         else:
             try:
                 connection = Connection.query.filter_by(id=connection_id).first()
-            except:
+            except Exception as e:
+                niceLogger.log("[X] Error getting connection: " + str(e))
                 connection = None
 
             if connection and connection.user_id == current_user.id:
-                if conn_accept_change == "on":
-                    connection.name = name
-                    connection.apiID = api_id
-                    connection.apiSecret = api_hash
-                    connection.type = type
-                    connection.last_modified = db.func.current_timestamp()
-                    try:
-                        db.session.commit()
-                        text = "Connection updated successfully!"
-                        category = "success"
-                        message = {
-                            "text": text,
-                            "category": category,
-                            "last_modified": {
-                                "day": connection.last_modified.day,
-                                "month": connection.last_modified.month,
-                                "year": connection.last_modified.year,
-                                "hour": connection.last_modified.hour,
-                                "minute": connection.last_modified.minute,
-                                "second": connection.last_modified.second,
-                            },
-                        }
-                        return jsonify(message=message)
-                    except Exception as e:
-                        print(e)
-                        text = "Error updating connection."
-                        category = "danger"
-                        message = {"text": text, "category": category}
-                        return jsonify(message=message)
+                try:
+                    connection_refactor_config = ConnectionRefactorConfig.query.filter_by(connection_id=connection_id).first()
+                except Exception as e:
+                    niceLogger.log("[X] Error getting connection refactor config: " + str(e))
+                    connection_refactor_config = None
+                if connection_refactor_config:
+                    connection_refactor_config.config = json.dumps(conn_config)
+                    connection_refactor_config.last_modified = db.func.current_timestamp()
                 else:
-                    text = "Please confirm that you want to update this connection."
-                    category = "danger"
-                    message = {"text": text, "category": category}
-                    return jsonify(message=message)
-
+                    connection_refactor_config = ConnectionRefactorConfig(
+                        connection_id=connection_id,
+                        config=json.dumps(conn_config),
+                        last_modified=db.func.current_timestamp(),
+                    )
+                try:
+                    db.session.add(connection_refactor_config)
+                    db.session.commit()
+                    niceLogger.log("[+] Worker config saved successfully!")
+                    flash("Worker config saved successfully!", category="success")
+                    return redirect(url_for("views.rules"))
+                except Exception as e:
+                    flash("Error saving worker config.", category="error")
+                    niceLogger.log("[X] Error saving worker config: " + str(e))
+                    return jsonify({"success": False})
             else:
-                text = "Connection does not exist."
-                category = "danger"
-                message = {"text": text, "category": category}
-                return jsonify(message=message)
-    return redirect(url_for("views.connections"))
+                niceLogger.log("[X] Connection does not exist.")
+                flash("Connection does not exist.", category="error")
+                return jsonify({"success": False})
+            
+@views.route("/workers", methods=["GET"])  # type: ignore
+@login_required
+def workers():
+    if request.method == "GET":
+        connections = current_user.connections
+        connectionWorkerList = []
+        if len(connections) > 0:
+            for connection in connections:
+                connectionWorker = ConnectionWorker.query.filter_by(connection_id=connection.id, type=WorkerType.MESSAGE_LISTENER).first()
+                connectionKeyValue = {}
+                connectionKeyValue["name"] = connection.name
+                if connectionWorker:
+                    connectionKeyValue["worker"] = connectionWorker
+                else:
+                    connectionKeyValue["worker"] = None
+                connectionWorkerList.append(connectionKeyValue)
+        return render_template("workers.html", user=current_user, connectionWorkerList=connectionWorkerList, WorkerType=WorkerType, WorkerStatus=WorkerStatus)
+
+
+@views.route("/loadWorkerConfig", methods=["GET"])  # type: ignore
+@login_required
+def loadWorkerConfig():
+    if request.method == "GET":
+        connection_id = request.args.get("connection_id")
+        if connection_id == "":
+            flash("Please select a connection.", category="error")
+        else:
+            try:
+                connection = Connection.query.filter_by(id=connection_id).first()
+            except Exception as e:
+                niceLogger.log("[X] Error getting connection: " + str(e))
+                connection = None
+
+            if connection and connection.user_id == current_user.id:
+                try:
+                    connection_refactor_config = ConnectionRefactorConfig.query.filter_by(connection_id=connection_id).first()
+                except Exception as e:
+                    niceLogger.log("[X] Error getting connection refactor config: " + str(e))
+                    connection_refactor_config = None
+                if connection_refactor_config:
+                    return jsonify({"success": True, "config": json.loads(connection_refactor_config.config)})
+                else:
+                    return jsonify({"success": False})
+            else:
+                niceLogger.log("[X] Connection does not exist.")
+                flash("Connection does not exist.", category="error")
+                return jsonify({"success": False})

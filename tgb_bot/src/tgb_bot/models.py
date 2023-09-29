@@ -16,6 +16,22 @@ class ConnectionType(Enum):
     USER = 'user'
     BOT = 'bot'
 
+class WorkerType(Enum):
+    GENERIC = 'generic'
+    MESSAGE_LISTENER = 'message_listener'
+    SEND_CODE = 'send_code'
+    CHECK_CODE = 'check_code'
+    MESSAGE_SENDER = 'message_sender'
+    MESSAGE_REFACTORER = 'message_refactorer'
+
+class WorkerStatus(Enum):
+    STARTED = 'started'
+    RUNNING = 'running'
+    STOPPED = 'stopped'
+    FINISHED = 'finished'
+    FAILED = 'failed'
+    UNKNOWN = 'unknown'
+    REVOKED = 'revoked'
 
 class Connection(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,8 +44,20 @@ class Connection(db.Model):
     last_modified = db.Column(db.DateTime, default=db.func.current_timestamp())
     session = db.Column(db.String(500))
 
-# class ConnectionRefactorConfig(db.Model):
+class ConnectionRefactorConfig(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    connection_id = db.Column(db.Integer, db.ForeignKey('connection.id'))
+    config = db.Column(db.String(5000))
+    last_modified = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+class ConnectionWorker(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    connection_id = db.Column(db.Integer, db.ForeignKey('connection.id'))
+    worker_id = db.Column(db.String(150))
+    status = db.Column(db.Enum(WorkerStatus), default=WorkerStatus.UNKNOWN)
+    type = db.Column(db.Enum(WorkerType), default=WorkerType.GENERIC)
+    date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 class CeleryTasks():
     id = db.Column(db.Integer, primary_key=True)
